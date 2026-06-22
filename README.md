@@ -121,6 +121,10 @@ Confidence : 0.7629
 
 ## Interactive Dashboard
 
+### Dashboard Preview
+
+![Dashboard](assets/dashboard_full.png)
+
 Launch the dashboard:
 
 ```bash
