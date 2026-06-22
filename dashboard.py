@@ -10,6 +10,7 @@ import pandas as pd
 from predict import predict_npz
 
 app = dash.Dash(__name__)
+server = app.server
 
 DATA_DIR = "data/processed"
 
