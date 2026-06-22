@@ -124,8 +124,14 @@ def predict_npz(path):
     pred_idx = probs.argmax().item()
 
     return {
-        "prediction": idx_to_label[pred_idx],
-        "confidence": float(probs[pred_idx]),
-        "global_view": d["global_view"],
-        "local_view": d["local_view"]
-    }
+    "prediction": idx_to_label[pred_idx],
+    "confidence": float(probs[pred_idx]),
+
+    "period_days": float(d["period"]),
+    "duration_hours": float(d["duration_hrs"]),
+    "depth_ppm": float(d["depth_ppm"]),
+    "snr": float(d["snr"]),
+
+    "global_view": d["global_view"],
+    "local_view": d["local_view"]
+}

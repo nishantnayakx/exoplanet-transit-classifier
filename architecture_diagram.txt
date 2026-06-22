@@ -1,0 +1,48 @@
+Exoplanet Light Curve
+          |
+          v
+      Phase Fold
+          |
+          v
+
++-------------------+
+| Global View (201) |
++-------------------+
+          |
+          v
+      CNN Branch
+          |
+          |
+          +------------------+
+                             |
++-------------------+        |
+| Local View (61)   |        |
++-------------------+        |
+          |                  |
+          v                  |
+      CNN Branch             |
+          |                  |
+          +------------------+
+                             |
++-------------------+        |
+| Scalar Features   |--------+
+| Period            |
+| Duration          |
+| Depth             |
+| SNR               |
++-------------------+
+          |
+          v
+
+     Feature Fusion
+          |
+          v
+
+     Dense Layers
+          |
+          v
+
++-------------------+
+| Planet Transit    |
+| False Positive    |
++-------------------+
