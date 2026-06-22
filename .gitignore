@@ -1,9 +1,6 @@
 __pycache__/
 *.pyc
 
-candidate_ranking.csv
-
-reports/
 
 .vscode/
 
