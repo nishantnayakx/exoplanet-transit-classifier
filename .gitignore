@@ -8,3 +8,5 @@ reports/
 .vscode/
 
 dashboard_v1_backup.py
+
+__pycache__/
