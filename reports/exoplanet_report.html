@@ -1,0 +1,322 @@
+
+<html>
+<head>
+<title>Exoplanet Transit Classifier Report</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 40px;
+}
+
+img {
+    max-width: 800px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Exoplanet Transit Classifier</h1>
+
+<h2>Project Summary</h2>
+
+<p>
+This project uses a deep learning based dual-view CNN
+to identify potential exoplanet transit signals from
+Kepler light curve observations.
+</p>
+
+<h2>Model Performance</h2>
+
+<ul>
+<li>Validation Accuracy: 78.7%</li>
+<li>ROC AUC: 0.8424</li>
+<li>Planet Precision: 0.82</li>
+<li>Planet Recall: 0.87</li>
+<li>Planet F1: 0.84</li>
+</ul>
+
+<h2>Confusion Matrix</h2>
+
+<img src="../assets/confusion_matrix.png">
+
+<h2>ROC Curve</h2>
+
+<img src="../assets/roc_curve.png">
+
+<h2>Precision Recall Curve</h2>
+
+<img src="../assets/pr_curve.png">
+
+<h2>Top Candidates</h2>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>rank</th>
+      <th>file</th>
+      <th>prediction</th>
+      <th>confidence</th>
+      <th>scientific_score</th>
+      <th>period_days</th>
+      <th>duration_hours</th>
+      <th>depth_ppm</th>
+      <th>snr</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>4455231_K01332.03.npz</td>
+      <td>planet_transit</td>
+      <td>0.933549</td>
+      <td>0.840518</td>
+      <td>56.637918</td>
+      <td>6.1720</td>
+      <td>589.7</td>
+      <td>20.9</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>10858691_K01306.04.npz</td>
+      <td>planet_transit</td>
+      <td>0.927130</td>
+      <td>0.834614</td>
+      <td>29.221496</td>
+      <td>4.0140</td>
+      <td>394.0</td>
+      <td>14.6</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>3832474_K00806.03.npz</td>
+      <td>planet_transit</td>
+      <td>0.926369</td>
+      <td>0.833919</td>
+      <td>29.159862</td>
+      <td>4.8030</td>
+      <td>488.0</td>
+      <td>11.6</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>6587280_K00857.02.npz</td>
+      <td>planet_transit</td>
+      <td>0.924961</td>
+      <td>0.832624</td>
+      <td>20.026141</td>
+      <td>1.6110</td>
+      <td>421.2</td>
+      <td>10.7</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>4650733_K01659.01.npz</td>
+      <td>planet_transit</td>
+      <td>0.924283</td>
+      <td>0.832104</td>
+      <td>29.539090</td>
+      <td>4.1390</td>
+      <td>403.3</td>
+      <td>18.8</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>8410727_K01148.02.npz</td>
+      <td>planet_transit</td>
+      <td>0.920074</td>
+      <td>0.828189</td>
+      <td>25.263047</td>
+      <td>6.2200</td>
+      <td>125.5</td>
+      <td>14.3</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>7287995_K00877.03.npz</td>
+      <td>planet_transit</td>
+      <td>0.919810</td>
+      <td>0.828043</td>
+      <td>20.837629</td>
+      <td>2.3734</td>
+      <td>439.0</td>
+      <td>14.9</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>6786348_K01749.01.npz</td>
+      <td>planet_transit</td>
+      <td>0.918748</td>
+      <td>0.827191</td>
+      <td>26.964501</td>
+      <td>3.7920</td>
+      <td>601.7</td>
+      <td>20.1</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>3240158_K01106.02.npz</td>
+      <td>planet_transit</td>
+      <td>0.916472</td>
+      <td>0.824922</td>
+      <td>15.986893</td>
+      <td>4.1580</td>
+      <td>178.5</td>
+      <td>10.9</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>10538176_K01301.02.npz</td>
+      <td>planet_transit</td>
+      <td>0.915556</td>
+      <td>0.824511</td>
+      <td>37.514213</td>
+      <td>5.3030</td>
+      <td>935.0</td>
+      <td>28.9</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>6604328_K01736.01.npz</td>
+      <td>planet_transit</td>
+      <td>0.915465</td>
+      <td>0.824272</td>
+      <td>31.003307</td>
+      <td>5.2530</td>
+      <td>645.2</td>
+      <td>22.1</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>1718189_K00993.01.npz</td>
+      <td>planet_transit</td>
+      <td>0.914386</td>
+      <td>0.823234</td>
+      <td>21.853629</td>
+      <td>3.4390</td>
+      <td>355.6</td>
+      <td>23.0</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>7032421_K01747.01.npz</td>
+      <td>planet_transit</td>
+      <td>0.914095</td>
+      <td>0.823032</td>
+      <td>20.558484</td>
+      <td>1.4490</td>
+      <td>677.3</td>
+      <td>20.8</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>12266636_K01522.01.npz</td>
+      <td>planet_transit</td>
+      <td>0.913703</td>
+      <td>0.822838</td>
+      <td>33.385618</td>
+      <td>5.0361</td>
+      <td>553.2</td>
+      <td>37.1</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>11176127_K01430.02.npz</td>
+      <td>planet_transit</td>
+      <td>0.913723</td>
+      <td>0.822764</td>
+      <td>22.928863</td>
+      <td>2.0831</td>
+      <td>908.9</td>
+      <td>21.3</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>7455287_K00886.03.npz</td>
+      <td>planet_transit</td>
+      <td>0.912609</td>
+      <td>0.821688</td>
+      <td>20.995879</td>
+      <td>2.6333</td>
+      <td>767.3</td>
+      <td>18.2</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>10004738_K01598.03.npz</td>
+      <td>planet_transit</td>
+      <td>0.912257</td>
+      <td>0.821177</td>
+      <td>13.930688</td>
+      <td>2.3120</td>
+      <td>186.5</td>
+      <td>14.9</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>8150320_K00904.02.npz</td>
+      <td>planet_transit</td>
+      <td>0.911824</td>
+      <td>0.821113</td>
+      <td>27.954134</td>
+      <td>3.9500</td>
+      <td>942.5</td>
+      <td>25.4</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>10166274_K01078.03.npz</td>
+      <td>planet_transit</td>
+      <td>0.911196</td>
+      <td>0.820772</td>
+      <td>28.464648</td>
+      <td>2.6657</td>
+      <td>1629.8</td>
+      <td>28.9</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>3560301_K00968.01.npz</td>
+      <td>false_positive</td>
+      <td>0.909433</td>
+      <td>0.819525</td>
+      <td>4.648416</td>
+      <td>38.1939</td>
+      <td>128.4</td>
+      <td>91.7</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Methodology</h2>
+
+<ul>
+<li>Kepler Candidate Data</li>
+<li>Global View Representation</li>
+<li>Local Transit View Representation</li>
+<li>Dual Branch CNN Architecture</li>
+<li>Probability Ranking System</li>
+</ul>
+
+<h2>Future Improvements</h2>
+
+<ul>
+<li>Explainable AI visualizations</li>
+<li>Attention mechanisms</li>
+<li>Multi-mission support (Kepler + TESS)</li>
+<li>Real-time deployment API</li>
+</ul>
+
+</body>
+</html>
