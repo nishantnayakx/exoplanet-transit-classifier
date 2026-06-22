@@ -71,6 +71,15 @@ Output → Planet Transit / False Positive
 
 ## Results
 
+Model Evaluation:
+
+- Validation Accuracy: 78.7%
+- ROC-AUC: 0.8424
+- Planet Precision: 0.82
+- Planet Recall: 0.87
+- Planet F1 Score: 0.84
+
+
 ### Validation Performance
 
 | Metric              | Value  |
@@ -137,6 +146,22 @@ Confidence : 0.7629
 
 ## Interactive Dashboard
 
+The project includes a Dash-powered dashboard for exploring predictions and candidate transit signals.
+
+Features:
+
+- Dataset overview
+- Model metrics
+- Prediction distribution
+- Confidence distribution
+- Confusion Matrix
+- Top-ranked candidates
+- Candidate explorer
+- Prediction Confidence
+- Global view visualization
+- Local view visualization
+- Transit statistics
+
 ### Dashboard Preview
 
 ![Dashboard](assets/dashboard_full.png)
@@ -151,17 +176,44 @@ Features:
 
 * Dataset Overview
 * Model Metrics
+* Prediction distribution
+* Confidence distribution
 * Confusion Matrix
+* Top-ranked candidates
 * Candidate Explorer
 * Prediction Confidence
 * Global View Visualization
 * Local View Visualization
+* Transit statistics
 
 Open:
 
 ```text
 http://127.0.0.1:8050
 ```
+## Candidate Ranking System
+
+After inference, all processed candidates are ranked according to:
+
+- Model confidence
+- Transit depth
+- Signal-to-noise ratio (SNR)
+- Transit duration
+- Orbital period
+
+The ranking pipeline generates:
+
+candidate_ranking.csv
+
+containing the most promising exoplanet candidates.
+
+Example:
+
+| Rank | Candidate | Confidence |
+|------|------------|------------|
+| 1 | K01332.03 | 0.9335 |
+| 2 | K01306.04 | 0.9271 |
+| 3 | K00806.03 | 0.9263 |
 
 ---
 
@@ -170,6 +222,10 @@ http://127.0.0.1:8050
 ```text
 data/
 assets/
+├── confusion_matrix.png
+├── roc_curve.png
+├── pr_curve.png
+├── dashboard_full.png
 models/
 
 01_download_catalog.py
@@ -177,6 +233,10 @@ models/
 03_train_classifier.py
 04_evaluate_classifier.py
 05_predict.py
+06_evaluate_model.py
+07_rank_candidates.py
+08_export_report.py
+09_explain_prediction.py
 predict.py
 dashboard.py
 README.md
