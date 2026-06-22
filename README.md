@@ -100,6 +100,22 @@ Overall Accuracy: **80%**
 
 ---
 
+## Additional Evaluation Metrics
+
+### ROC Curve
+
+![ROC Curve](assets/roc_curve.png)
+
+The model achieved an ROC-AUC score of **0.8424**, demonstrating strong discrimination between exoplanet transit candidates and false positives.
+
+### Precision-Recall Curve
+
+![PR Curve](assets/pr_curve.png)
+
+The Precision-Recall curve highlights the classifier's ability to maintain high precision while retrieving a large fraction of true exoplanet candidates.
+
+---
+
 ## Inference
 
 Predict a candidate signal:
