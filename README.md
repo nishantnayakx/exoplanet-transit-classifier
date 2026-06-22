@@ -92,6 +92,14 @@ Overall Accuracy: **80%**
 
 ---
 
+## Visual Results
+
+### Confusion Matrix
+
+![Confusion Matrix](assets/confusion_matrix.png)
+
+---
+
 ## Inference
 
 Predict a candidate signal:
