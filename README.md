@@ -1,63 +1,372 @@
-# PS7 Classify pipeline - setup and run order
+\# Exoplanet Transit Classifier
 
-This is YOUR part of the team pipeline (the Classify stage). It is fully
-automated: run the three scripts in order, on your own machine, with
-internet access. Nothing here needs manual clicking on websites.
 
-## One-time setup
 
-```bash
-pip install -r requirements.txt
+\## Overview
+
+
+
+An end-to-end machine learning system for detecting exoplanet transit candidates from astronomical light-curve data using a dual-view Convolutional Neural Network (CNN).
+
+
+
+The project processes phase-folded light curves, extracts global and local transit views, combines them with astrophysical features, and classifies candidates as either:
+
+
+
+\* Planet Transit
+
+\* False Positive
+
+
+
+The repository includes data processing, model training, evaluation, inference, and an interactive dashboard for visualization.
+
+
+
+\---
+
+
+
+\## Problem Statement
+
+
+
+Exoplanets are commonly detected using the transit method, where a planet passes in front of its host star and causes a small dip in brightness.
+
+
+
+Modern surveys generate thousands of candidate signals. Manual inspection is expensive and time-consuming.
+
+
+
+This project applies deep learning to automatically classify transit candidates and assist in identifying potential exoplanets.
+
+
+
+\---
+
+
+
+\## Dataset
+
+
+
+\### Processed Candidate Signals
+
+
+
+\* Total Samples: 943
+
+\* Planet Transits: 593
+
+\* False Positives: 350
+
+
+
+Each processed sample contains:
+
+
+
+\* Global Transit View (201 bins)
+
+\* Local Transit View (61 bins)
+
+\* Orbital Period
+
+\* Transit Duration
+
+\* Transit Depth
+
+\* Signal-to-Noise Ratio (SNR)
+
+
+
+\---
+
+
+
+\## Model Architecture
+
+
+
+\### Inputs
+
+
+
+1\. Global View (201 bins)
+
+2\. Local View (61 bins)
+
+3\. Scalar Features
+
+
+
+&#x20;  \* Period
+
+&#x20;  \* Duration
+
+&#x20;  \* Depth
+
+&#x20;  \* SNR
+
+
+
+\### Architecture
+
+
+
+Global View → CNN Branch
+
+
+
+Local View → CNN Branch
+
+
+
+Scalar Features → Dense Layer
+
+
+
+Feature Fusion → Fully Connected Layers
+
+
+
+Output → Planet Transit / False Positive
+
+
+
+\---
+
+
+
+\## Results
+
+
+
+\### Validation Performance
+
+
+
+| Metric              | Value  |
+
+| ------------------- | ------ |
+
+| Validation Accuracy | 78.7%  |
+
+| ROC-AUC             | 0.8424 |
+
+| Planet Precision    | 0.82   |
+
+| Planet Recall       | 0.87   |
+
+| Planet F1 Score     | 0.84   |
+
+
+
+\### Confusion Matrix
+
+
+
+```text
+
+\[\[239 111]
+
+&#x20;\[ 79 514]]
+
 ```
 
-If you're on Windows and pip complains about build tools for any package,
-install via Anaconda/Miniconda instead - `conda install -c conda-forge
-lightkurve astroquery pytorch` is the most reliable path on Windows.
 
-## Run order
 
-### Step 1 - Download labels (~30 seconds)
+Overall Accuracy: \*\*80%\*\*
+
+
+
+\---
+
+
+
+\## Inference
+
+
+
+Predict a candidate signal:
+
+
+
 ```bash
-python 01_download_catalog.py
-```
-Downloads the NASA Kepler KOI catalog directly via the official astroquery
-library - no manual CSV download needed. Produces `data/koi_catalog_clean.csv`.
 
-### Step 2 - Download light curves (slow - run this overnight or in chunks)
+python 05\_predict.py path/to/sample.npz
+
+```
+
+
+
+Example Output:
+
+
+
+```text
+
+Prediction
+
+\----------------------------------------
+
+Class      : planet\_transit
+
+Confidence : 0.7629
+
+```
+
+
+
+\---
+
+
+
+\## Interactive Dashboard
+
+
+
+Launch the dashboard:
+
+
+
 ```bash
-python 02_download_lightcurves.py --limit 50
+
+python dashboard.py
+
 ```
-Start with `--limit 50` to make sure it works, then scale up:
-```bash
-python 02_download_lightcurves.py --limit 500
+
+
+
+Features:
+
+
+
+\* Dataset Overview
+
+\* Model Metrics
+
+\* Confusion Matrix
+
+\* Candidate Explorer
+
+\* Prediction Confidence
+
+\* Global View Visualization
+
+\* Local View Visualization
+
+
+
+Open:
+
+
+
+```text
+
+http://127.0.0.1:8050
+
 ```
-This script is **resumable** - if your internet drops or you stop it
-(Ctrl+C), just run the same command again. It automatically skips stars
-it already processed and only downloads new ones up to the limit you set.
 
-Realistic target: 300-500 stars per class (600-1000 total) gives you a
-reasonable training set for the hackathon timeline. Each star takes
-roughly 5-15 seconds to download and process, so budget 1-3 hours of
-mostly-unattended runtime split across a few sessions.
 
-### Step 3 - Train the classifier (~5-15 minutes on a normal laptop CPU)
-```bash
-python 03_train_classifier.py
+
+\---
+
+
+
+\## Project Structure
+
+
+
+```text
+
+data/
+
+assets/
+
+models/
+
+
+
+01\_download\_catalog.py
+
+02\_download\_lightcurves.py
+
+03\_train\_classifier.py
+
+05\_predict.py
+
+predict.py
+
+dashboard.py
+
+README.md
+
 ```
-Trains the dual-view CNN on whatever you've downloaded so far. You can
-run this at any point after Step 2 has produced at least ~50-100 files
-per class - re-run it again later as you accumulate more data from Step 2.
 
-Produces:
-- `models/transit_classifier.pt` - trained weights
-- `models/label_encoder.json` - class name <-> index mapping
-- Printed train/val accuracy per epoch
 
-## Notes
 
-- All scripts create their own `data/` and `models/` folders automatically.
-- If Step 2 reports many `no_data` or `error` results, that's normal -
-  not every KIC ID has a usable light curve. The script just moves on.
-- Once you have a trained model, the next step is the SHAP explainability
-  panel and the Plotly dashboard - ask Claude for "the dashboard code"
-  when you get there.
+\---
+
+
+
+\## Technologies Used
+
+
+
+\* Python
+
+\* PyTorch
+
+\* NumPy
+
+\* Pandas
+
+\* Plotly
+
+\* Dash
+
+
+
+\---
+
+
+
+\## Future Improvements
+
+
+
+\* Larger dataset collection
+
+\* Hyperparameter optimization
+
+\* Explainable AI methods
+
+\* Additional astrophysical features
+
+\* Cloud deployment
+
+\* Multi-class classification
+
+
+
+\---
+
+
+
+\## Author
+
+
+
+Nishant Nayak
+
+
+
+GitHub:
+
+https://github.com/nishantnayakx
+
+
+
