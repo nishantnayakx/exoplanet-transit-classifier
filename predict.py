@@ -139,6 +139,6 @@ def predict_npz(path):
     "depth_ppm": float(d["depth_ppm"]),
     "snr": float(d["snr"]),
 
-    "global_view": d["global_view"],
-    "local_view": d["local_view"]
+    "global_view": d["global_view"].tolist(),
+    "local_view": d["local_view"].tolist()
 }
