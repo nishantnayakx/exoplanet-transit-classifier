@@ -135,7 +135,11 @@ app.layout = html.Div([
                 html.Th("File"),
                 html.Th("Prediction"),
                 html.Th("Confidence"),
-                html.Th("Scientific Score")
+                html.Th("Scientific Score"),
+                html.Th("Period"),
+                html.Th("Duration"),
+                html.Th("Depth"),
+                html.Th("SNR")
             ])
         ]
 
@@ -146,18 +150,12 @@ app.layout = html.Div([
                 html.Td(row["rank"]),
                 html.Td(row["file"]),
                 html.Td(row["prediction"]),
-                html.Td(
-                    round(
-                        row["confidence"],
-                        4
-                    )
-                ),
-                html.Td(
-                    round(
-                        row["scientific_score"],
-                        4
-                    )
-                )
+                html.Td(round(row["confidence"],4)),
+                html.Td(round(row["scientific_score"],4)),
+                html.Td(round(row["period_days"],2)),
+                html.Td(round(row["duration_hours"],2)),
+                html.Td(round(row["depth_ppm"],2)),
+                html.Td(round(row["snr"],2))
             ])
 
             for _, row in top20_df.iterrows()
@@ -300,6 +298,10 @@ def update_candidate(path):
 
         html.H4(
             f"Confidence: {result['confidence']:.4f}"
+        ),
+
+        html.H4(
+            f"Scientific Score: {result['scientific_score']:.4f}"
         ),
 
         html.H4(

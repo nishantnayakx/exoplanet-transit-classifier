@@ -123,9 +123,16 @@ def predict_npz(path):
 
     pred_idx = probs.argmax().item()
 
+    scientific_score = (
+        min(float(d["snr"]) / 20.0, 1.0) * 0.4 +
+        min(float(d["depth_ppm"]) / 1000.0, 1.0) * 0.3 +
+        min(float(d["duration_hrs"]) / 10.0, 1.0) * 0.3
+    )
+
     return {
     "prediction": idx_to_label[pred_idx],
     "confidence": float(probs[pred_idx]),
+    "scientific_score": scientific_score,
 
     "period_days": float(d["period"]),
     "duration_hours": float(d["duration_hrs"]),

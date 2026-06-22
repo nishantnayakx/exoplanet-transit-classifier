@@ -24,6 +24,7 @@ for i, f in enumerate(files):
             "file": os.path.basename(f),
             "prediction": r["prediction"],
             "confidence": r["confidence"],
+            "scientific_score": r["scientific_score"],
             "period_days": r["period_days"],
             "duration_hours": r["duration_hours"],
             "depth_ppm": r["depth_ppm"],
