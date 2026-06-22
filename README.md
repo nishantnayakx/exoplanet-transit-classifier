@@ -159,6 +159,7 @@ models/
 01_download_catalog.py
 02_download_lightcurves.py
 03_train_classifier.py
+04_evaluate_classifier.py
 05_predict.py
 predict.py
 dashboard.py
