@@ -69,6 +69,21 @@ Output → Planet Transit / False Positive
 
 ---
 
+## Features
+
+- Dual-View CNN Architecture
+- Global and Local Transit Light Curve Analysis
+- Automated Candidate Ranking
+- Scientific Score Calculation
+- Interactive Dash Dashboard
+- Candidate Explorer
+- ROC Curve Evaluation
+- Precision-Recall Evaluation
+- HTML Scientific Report Generation
+- Prediction Explainability
+
+---
+
 ## Results
 
 Model Evaluation:
@@ -193,9 +208,10 @@ http://127.0.0.1:8050
 ```
 ## Candidate Ranking System
 
-After inference, all processed candidates are ranked according to:
+After inference, all processed Kepler candidates are ranked according to:
 
 - Model confidence
+- Scientific Score
 - Transit depth
 - Signal-to-noise ratio (SNR)
 - Transit duration
@@ -214,6 +230,21 @@ Example:
 | 1 | K01332.03 | 0.9335 |
 | 2 | K01306.04 | 0.9271 |
 | 3 | K00806.03 | 0.9263 |
+
+---
+
+## Scientific Report
+
+The pipeline automatically generates an HTML report summarizing:
+
+- Dataset statistics
+- Model performance
+- Candidate rankings
+- Scientific metrics
+
+Output:
+
+reports/exoplanet_report.html
 
 ---
 
