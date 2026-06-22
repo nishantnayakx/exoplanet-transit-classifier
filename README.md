@@ -217,6 +217,64 @@ Example:
 
 ---
 
+## Advanced Features
+
+### Candidate Ranking System
+
+The project ranks all processed exoplanet candidates using model confidence and scientific transit characteristics.
+
+Generated file:
+
+candidate_ranking.csv
+
+Contains:
+
+- Rank
+- Prediction
+- Confidence
+- Scientific Score
+- Period
+- Duration
+- Transit Depth
+- Signal-to-Noise Ratio
+
+Top candidates can be inspected directly from the dashboard.
+
+---
+
+### Prediction Explanation Engine
+
+The explain_prediction module provides human-readable reasoning behind model predictions.
+
+Example:
+
+- High confidence planet transit
+- Strong signal-to-noise ratio
+- Transit depth consistent with planetary events
+- Stable local transit profile
+
+This helps interpret why the model classified a candidate as a likely exoplanet.
+
+---
+
+### Interactive Candidate Explorer
+
+Dashboard features:
+
+- Candidate selection dropdown
+- Prediction label
+- Confidence score
+- Orbital period
+- Transit duration
+- Transit depth
+- Signal-to-noise ratio
+- Global View graph (201 bins)
+- Local View graph (61 bins)
+
+This allows visual inspection of every processed candidate.
+
+---
+
 ## Project Structure
 
 ```text
@@ -234,9 +292,10 @@ models/
 04_evaluate_classifier.py
 05_predict.py
 06_evaluate_model.py
-07_rank_candidates.py
+07_rank_candidates.py      # ranks candidates by confidence and scientific score
 08_export_report.py
-09_explain_prediction.py
+09_explain_prediction.py   # interpretable prediction explanations
+candidate_ranking.csv      # ranked output of all candidates
 predict.py
 dashboard.py
 README.md
