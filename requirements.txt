@@ -12,3 +12,5 @@ plotly>=5.20
 
 matplotlib>=3.9
 seaborn>=0.13
+
+gunicorn>=23.0.0
