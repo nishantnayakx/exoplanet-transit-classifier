@@ -462,6 +462,7 @@ This allows visual inspection of every processed candidate.
 ├── dashboard.py
 ├── dashboard_dev.py
 ├── predict.py
+├── explain_prediction.py            # interpretable prediction explanations
 │
 ├── candidate_ranking.csv            # ranked output of all candidates
 │
@@ -472,6 +473,7 @@ This allows visual inspection of every processed candidate.
 ├── assets/
 │   ├── architecture_diagram.png
 │   ├── dashboard_full.png
+|   ├── dashboard_explanation.png
 │   ├── confusion_matrix.png
 │   ├── roc_curve.png
 │   └── pr_curve.png
@@ -485,10 +487,10 @@ This allows visual inspection of every processed candidate.
 ├── 06_evaluate_model.py
 ├── 07_rank_candidates.py            # ranks candidates by confidence and scientific score
 ├── 08_export_report.py
-├── 09_explain_prediction.py         # interpretable prediction explanations
 │
 ├── README.md
 ├── LICENSE
+├── requirements.txt
 └── CITATION.cff
 ```
 
