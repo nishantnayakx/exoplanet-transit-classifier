@@ -1,334 +1,146 @@
-import os
-import glob
-
-import dash
-from dash import dcc, html, Input, Output
-import plotly.express as px
-import plotly.graph_objects as go
 import pandas as pd
-
-from predict import predict_npz
+import dash
+from dash import html, dcc
+import plotly.express as px
 
 app = dash.Dash(__name__)
-server = app.server
 
-DATA_DIR = "data/processed"
-
-files = sorted(
-    glob.glob(
-        os.path.join(DATA_DIR, "*.npz")
-    )
-)
-
-ranking_df = pd.read_csv(
-    "candidate_ranking.csv"
-)
+ranking_df = pd.read_csv("candidate_ranking.csv")
 
 top20_df = ranking_df.head(20)
 
-metrics = pd.DataFrame({
-    "Metric": [
-        "Validation Accuracy",
-        "ROC-AUC",
-        "Planet Precision",
-        "Planet Recall",
-        "Planet F1"
-    ],
-    "Value": [
-        0.787,
-        0.8424,
-        0.82,
-        0.87,
-        0.84
-    ]
-})
-
-metric_fig = px.bar(
-    metrics,
-    x="Metric",
-    y="Value",
-    title="Model Performance"
-)
-
 prediction_fig = px.pie(
-    ranking_df,
-    names="prediction",
-    title="Prediction Distribution"
+ranking_df,
+names="prediction",
+title="Prediction Distribution"
 )
 
 confidence_fig = px.histogram(
-    ranking_df,
-    x="confidence",
-    nbins=30,
-    title="Confidence Distribution"
-)
-
-scientific_fig = px.bar(
-    ranking_df.head(20),
-    x="file",
-    y="scientific_score",
-    title="Top Scientific Candidates",
+ranking_df,
+x="confidence",
+nbins=30,
+title="Confidence Distribution"
 )
 
 app.layout = html.Div([
 
-    html.H1(
-        "Exoplanet Transit Classifier Dashboard"
-    ),
 
-    html.Hr(),
+html.H1("Exoplanet Transit Classifier"),
 
-    html.H2("Dataset Overview"),
+html.Hr(),
 
-    html.Ul([
-        html.Li(
-            f"Total Samples: {len(ranking_df)}"
-        ),
-        html.Li(
-            f"Planet Transit Predictions: {(ranking_df['prediction']=='planet_transit').sum()}"
-        ),
-        html.Li(
-            f"False Positive Predictions: {(ranking_df['prediction']=='false_positive').sum()}"
-        )
-    ]),
+html.H2("Project Summary"),
 
-    html.Hr(),
+html.P(
+    """
+    Deep learning pipeline for identifying
+    exoplanet transit candidates from Kepler
+    light curves using a dual-view CNN.
+    """
+),
 
-    html.H2("Model Metrics"),
+html.Hr(),
 
-    dcc.Graph(
-        figure=metric_fig
-    ),
+html.H2("Dataset Overview"),
 
-    html.Hr(),
+html.Ul([
+    html.Li("Total Samples: 943"),
+    html.Li("Planet Transits: 593"),
+    html.Li("False Positives: 350")
+]),
 
-    html.H2("Prediction Distribution"),
+html.Hr(),
 
-    dcc.Graph(
-        figure=prediction_fig
-    ),
+html.H2("Prediction Distribution"),
 
-    html.Hr(),
+dcc.Graph(
+    figure=prediction_fig
+),
 
-    html.H2("Confidence Distribution"),
+html.Hr(),
 
-    dcc.Graph(
-        figure=confidence_fig
-    ),
+html.H2("Confidence Distribution"),
 
-    html.Hr(),
+dcc.Graph(
+    figure=confidence_fig
+),
 
-    html.H2("Top Scientific Candidates"),
+html.Hr(),
 
-    dcc.Graph(
-        figure=scientific_fig
-    ),
+html.H2("Top Ranked Candidates"),
 
-    html.Hr(),
+html.Table(
 
-    html.H2("Top 20 Ranked Candidates"),
+    [
 
-    html.Table(
+        html.Tr([
+            html.Th("Rank"),
+            html.Th("File"),
+            html.Th("Prediction"),
+            html.Th("Confidence"),
+            html.Th("Scientific Score")
+        ])
 
-        [
-            html.Tr([
-                html.Th("Rank"),
-                html.Th("File"),
-                html.Th("Prediction"),
-                html.Th("Confidence"),
-                html.Th("Scientific Score"),
-                html.Th("Period"),
-                html.Th("Duration"),
-                html.Th("Depth"),
-                html.Th("SNR")
-            ])
-        ]
+    ] +
 
-        +
+    [
 
-        [
-            html.Tr([
-                html.Td(row["rank"]),
-                html.Td(row["file"]),
-                html.Td(row["prediction"]),
-                html.Td(round(row["confidence"],4)),
-                html.Td(round(row["scientific_score"],4)),
-                html.Td(round(row["period_days"],2)),
-                html.Td(round(row["duration_hours"],2)),
-                html.Td(round(row["depth_ppm"],2)),
-                html.Td(round(row["snr"],2))
-            ])
+        html.Tr([
 
-            for _, row in top20_df.iterrows()
-        ]
-    ),
+            html.Td(row["rank"]),
+            html.Td(row["file"]),
+            html.Td(row["prediction"]),
+            html.Td(round(row["confidence"], 4)),
+            html.Td(round(row["scientific_score"], 4))
 
-    html.Hr(),
+        ])
 
-    html.H2("Confusion Matrix"),
+        for _, row in top20_df.iterrows()
 
-    html.Img(
-        src="/assets/confusion_matrix.png",
-        style={
-            "width": "700px"
-        }
-    ),
+    ]
 
-    html.Hr(),
+),
 
-    html.H2("ROC Curve"),
+html.Hr(),
 
-    html.Img(
-        src="/assets/roc_curve.png",
-        style={
-            "width": "700px"
-        }
-    ),
+html.H2("ROC Curve"),
 
-    html.Hr(),
+html.Img(
+    src="/assets/roc_curve.png",
+    style={"width": "900px"}
+),
 
-    html.H2("Precision Recall Curve"),
+html.Hr(),
 
-    html.Img(
-        src="/assets/pr_curve.png",
-        style={
-            "width": "700px"
-        }
-    ),
+html.H2("Precision Recall Curve"),
 
-    html.Hr(),
+html.Img(
+    src="/assets/pr_curve.png",
+    style={"width": "900px"}
+),
 
-    html.H2("Candidate Explorer"),
+html.Hr(),
 
-    dcc.Dropdown(
-        id="candidate-dropdown",
+html.H2("Confusion Matrix"),
 
-        options=[
-            {
-                "label": os.path.basename(f),
-                "value": f
-            }
-            for f in files
-        ],
+html.Img(
+    src="/assets/confusion_matrix.png",
+    style={"width": "900px"}
+),
 
-        value=files[0]
-    ),
+html.Hr(),
 
-    html.Br(),
+html.H2("Architecture"),
 
-    html.Div(
-        id="prediction-output"
-    ),
+html.Img(
+    src="/assets/architecture_diagram.png",
+    style={"width": "900px"}
+)
 
-    html.Br(),
-
-    dcc.Graph(
-        id="global-view-graph"
-    ),
-
-    dcc.Graph(
-        id="local-view-graph"
-    )
 
 ])
 
-
-@app.callback(
-    [
-        Output(
-            "prediction-output",
-            "children"
-        ),
-
-        Output(
-            "global-view-graph",
-            "figure"
-        ),
-
-        Output(
-            "local-view-graph",
-            "figure"
-        )
-    ],
-
-    [
-        Input(
-            "candidate-dropdown",
-            "value"
-        )
-    ]
-)
-
-def update_candidate(path):
-
-    result = predict_npz(path)
-
-    global_fig = go.Figure()
-
-    global_fig.add_trace(
-        go.Scatter(
-            y=result["global_view"],
-            mode="lines",
-            name="Global View"
-        )
-    )
-
-    global_fig.update_layout(
-        title="Global View (201 bins)"
-    )
-
-    local_fig = go.Figure()
-
-    local_fig.add_trace(
-        go.Scatter(
-            y=result["local_view"],
-            mode="lines",
-            name="Local View"
-        )
-    )
-
-    local_fig.update_layout(
-        title="Local View (61 bins)"
-    )
-
-    pred_text = html.Div([
-
-        html.H3(
-            f"Prediction: {result['prediction']}"
-        ),
-
-        html.H4(
-            f"Confidence: {result['confidence']:.4f}"
-        ),
-
-        html.H4(
-            f"Scientific Score: {result['scientific_score']:.4f}"
-        ),
-
-        html.H4(
-            f"Period: {result['period_days']:.4f} days"
-        ),
-
-        html.H4(
-            f"Duration: {result['duration_hours']:.4f} hours"
-        ),
-
-        html.H4(
-            f"Depth: {result['depth_ppm']:.2f} ppm"
-        ),
-
-        html.H4(
-            f"SNR: {result['snr']:.2f}"
-        )
-
-    ])
-
-    return (
-        pred_text,
-        global_fig,
-        local_fig
-    )
-
+server = app.server
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
