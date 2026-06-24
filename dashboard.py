@@ -6,6 +6,7 @@ from dash import dcc, html, Input, Output
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
+import numpy as np
 
 from predict import predict_npz
 from explain_prediction import generate_explanation
@@ -236,42 +237,72 @@ app.layout = html.Div([
 
 @app.callback(
     [
-        Output(
-            "prediction-output",
-            "children"
-        ),
-
-        Output(
-            "global-view-graph",
-            "figure"
-        ),
-
-        Output(
-            "local-view-graph",
-            "figure"
-        )
+        Output("prediction-output", "children"),
+        Output("global-view-graph", "figure"),
+        Output("local-view-graph", "figure")
     ],
-
     [
-        Input(
-            "candidate-dropdown",
-            "value"
-        )
+        Input("candidate-dropdown", "value")
     ]
 )
-
 def update_candidate(path):
 
-    result = predict_npz(path)
-    explanations = generate_explanation(result)
+    filename = os.path.basename(path)
+
+    row = ranking_df[
+        ranking_df["file"] == filename
+    ].iloc[0]
+
+    data = np.load(path, allow_pickle=True)
+
+    explanations = []
+
+    if row["confidence"] > 0.90:
+        explanations.append(
+            "Model confidence is very high."
+        )
+    elif row["confidence"] > 0.75:
+        explanations.append(
+            "Model confidence is moderate."
+        )
+    else:
+        explanations.append(
+            "Model confidence is low."
+        )
+
+    if row["snr"] > 20:
+        explanations.append(
+            "Strong signal-to-noise ratio."
+        )
+    elif row["snr"] > 10:
+        explanations.append(
+            "Acceptable signal-to-noise ratio."
+        )
+    else:
+        explanations.append(
+            "Weak signal-to-noise ratio."
+        )
+
+    if row["depth_ppm"] > 500:
+        explanations.append(
+            "Transit depth is clearly visible."
+        )
+    else:
+        explanations.append(
+            "Transit depth is relatively shallow."
+        )
+
+    if row["scientific_score"] > 0.80:
+        explanations.append(
+            "High-priority candidate for follow-up study."
+        )
 
     global_fig = go.Figure()
 
     global_fig.add_trace(
         go.Scatter(
-            y=result["global_view"],
-            mode="lines",
-            name="Global View"
+            y=data["global_view"],
+            mode="lines"
         )
     )
 
@@ -283,9 +314,8 @@ def update_candidate(path):
 
     local_fig.add_trace(
         go.Scatter(
-            y=result["local_view"],
-            mode="lines",
-            name="Local View"
+            y=data["local_view"],
+            mode="lines"
         )
     )
 
@@ -296,42 +326,43 @@ def update_candidate(path):
     pred_text = html.Div([
 
         html.H3(
-            f"Prediction: {result['prediction']}"
+            f"Prediction: {row['prediction']}"
         ),
 
         html.H4(
-            f"Confidence: {result['confidence']:.4f}"
+            f"Confidence: {row['confidence']:.4f}"
         ),
 
         html.H4(
-            f"Scientific Score: {result['scientific_score']:.4f}"
+            f"Scientific Score: {row['scientific_score']:.4f}"
         ),
 
         html.H4(
-            f"Period: {result['period_days']:.4f} days"
+            f"Period: {row['period_days']:.4f} days"
         ),
 
         html.H4(
-            f"Duration: {result['duration_hours']:.4f} hours"
+            f"Duration: {row['duration_hours']:.4f} hours"
         ),
 
         html.H4(
-            f"Depth: {result['depth_ppm']:.2f} ppm"
+            f"Depth: {row['depth_ppm']:.2f} ppm"
         ),
 
         html.H4(
-            f"SNR: {result['snr']:.2f}"
+            f"SNR: {row['snr']:.2f}"
         ),
-        
+
         html.Hr(),
 
-        html.H3("Prediction Explanation"),
+        html.H3(
+            "Prediction Explanation"
+        ),
 
         html.Ul([
             html.Li(x)
             for x in explanations
         ])
-
     ])
 
     return (
@@ -339,7 +370,6 @@ def update_candidate(path):
         global_fig,
         local_fig
     )
-
 
 if __name__ == "__main__":
     app.run(debug=True)
