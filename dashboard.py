@@ -257,11 +257,11 @@ def update_candidate(path):
 
     explanations = []
 
-    if row["confidence"] > 0.90:
+    if result["confidence"] > 0.90:
         explanations.append(
             "Model confidence is very high."
         )
-    elif row["confidence"] > 0.75:
+    elif result["confidence"] > 0.75:
         explanations.append(
             "Model confidence is moderate."
         )
@@ -270,11 +270,11 @@ def update_candidate(path):
             "Model confidence is low."
         )
 
-    if row["snr"] > 20:
+    if result["snr"] > 20:
         explanations.append(
             "Strong signal-to-noise ratio."
         )
-    elif row["snr"] > 10:
+    elif result["snr"] > 10:
         explanations.append(
             "Acceptable signal-to-noise ratio."
         )
@@ -283,7 +283,7 @@ def update_candidate(path):
             "Weak signal-to-noise ratio."
         )
 
-    if row["depth_ppm"] > 500:
+    if result["depth_ppm"] > 500:
         explanations.append(
             "Transit depth is clearly visible."
         )
@@ -292,9 +292,39 @@ def update_candidate(path):
             "Transit depth is relatively shallow."
         )
 
-    if row["scientific_score"] > 0.80:
+    if result["duration_hours"] < 10:
+        explanations.append(
+            "Transit duration is consistent with many planetary candidates."
+        )
+    else:
+        explanations.append(
+            "Transit duration is unusually long."
+        )
+
+    if result["period_days"] > 30:
+        explanations.append(
+            "Candidate has a relatively long orbital period."
+        )
+    elif result["period_days"] > 10:
+        explanations.append(
+            "Candidate has a moderate orbital period."
+        )
+    else:
+        explanations.append(
+            "Candidate has a short orbital period."
+        )
+
+    if result["scientific_score"] > 0.80:
         explanations.append(
             "High-priority candidate for follow-up study."
+        )
+    elif result["scientific_score"] > 0.60:
+        explanations.append(
+            "Moderately interesting candidate."
+        )
+    else:
+        explanations.append(
+            "Low-priority candidate."
         )
 
     global_fig = go.Figure()
