@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: Exoplanet Transit Classifier
+message: "If you use this software, please cite it."
+type: software
+
+authors:
+  - family-names: Nayak
+    given-names: Nishant
+
+repository-code: https://github.com/nishantnayakx/exoplanet-transit-classifier
+
+license: MIT
