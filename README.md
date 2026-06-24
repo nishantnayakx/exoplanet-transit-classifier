@@ -1,8 +1,8 @@
+# Exoplanet Transit Classifier
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-red)
 ![Dash](https://img.shields.io/badge/Dash-Interactive%20Dashboard-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow) 
-# Exoplanet Transit Classifier
 
 ## Overview
 
@@ -23,24 +23,36 @@ Production Dashboard:
 
 https://exoplanet-transit-classifier.onrender.com
 
+The hosted dashboard includes:
+
+* Candidate Explorer
+* Prediction Explanations
+* Scientific Scoring
+* Global Transit Visualization
+* Local Transit Visualization
+* Candidate Rankings
+* Performance Metrics
+* Interactive Analytics
+
 ---
 
 ## Dashboard Versions
 
-### Production Dashboard (`dashboard.py`)
+### Interactive Dashboard (`dashboard.py`)
 
-The production dashboard is deployed on Render and optimized for cloud hosting.
+The primary dashboard is used for both local execution and Render deployment.
 
 Features:
 
-* Dataset Overview
-* Prediction Distribution
-* Confidence Distribution
-* Candidate Rankings
-* ROC Curve
-* Precision-Recall Curve
-* Confusion Matrix
-* Architecture Diagram
+* Candidate Explorer
+* Prediction Explanation Engine
+* Scientific Score Analysis
+* Confidence Analysis
+* Transit Statistics
+* Global Transit View
+* Local Transit View
+* Candidate Ranking Explorer
+* Interactive Visual Analytics
 
 Run locally:
 
@@ -50,23 +62,25 @@ python dashboard.py
 
 ---
 
-### Development Dashboard (`dashboard_dev.py`)
+### Analytics Dashboard (`dashboard_basic.py`)
 
-The development dashboard provides the complete research interface.
+Lightweight dashboard focused on model evaluation and project metrics.
 
-Additional Features:
+Features:
 
-* Real-time candidate inference
-* Candidate Explorer
-* Global View visualization
-* Local View visualization
-* Transit statistics inspection
-* Prediction explanation support
+* Dataset Overview
+* Prediction Distribution
+* Confidence Distribution
+* Top Candidate Rankings
+* ROC Curve
+* Precision-Recall Curve
+* Confusion Matrix
+* Architecture Visualization
 
 Run locally:
 
 ```bash
-python dashboard_dev.py
+python dashboard_basic.py
 ```
 ---
 
@@ -110,6 +124,41 @@ pip install -r requirements.txt
 ```
 ---
 
+## Quick Start
+
+Run Interactive Dashboard:
+
+```bash
+python dashboard.py
+```
+
+Run Analytics Dashboard:
+
+```bash
+python dashboard_basic.py
+```
+
+Open:
+
+```text
+http://127.0.0.1:8050
+```
+
+---
+
+## Model Information
+
+| Property         | Value                                                 |
+| ---------------- | ----------------------------------------------------- |
+| Architecture     | Dual-View CNN                                         |
+| Framework        | PyTorch                                               |
+| Input Features   | Global View, Local View, Period, Duration, Depth, SNR |
+| Output Classes   | Planet Transit / False Positive                       |
+| Training Samples | 943                                                   |
+| ROC-AUC          | 0.8424                                                |
+
+---
+
 ## Model Architecture
 
 ### Inputs
@@ -127,7 +176,7 @@ pip install -r requirements.txt
 
 Global View → CNN Branch
 
-Local View → CNN Branch
+Local Transit View → CNN Branch
 
 Scalar Features → Dense Layer
 
@@ -147,10 +196,12 @@ Output → Planet Transit / False Positive
 - Scientific Score Calculation
 - Interactive Dash Dashboard
 - Candidate Explorer
+- Confidence Analysis
 - ROC Curve Evaluation
 - Precision-Recall Evaluation
 - HTML Scientific Report Generation
 - Prediction Explainability
+- Render Cloud Deployment
 
 ---
 
@@ -162,6 +213,19 @@ Output → Planet Transit / False Positive
 - Generated scientific candidate rankings using astrophysical metrics.
 - Built an interactive Dash dashboard.
 - Deployed a cloud-hosted dashboard on Render.
+- Added explainable AI-style prediction interpretation.
+
+---
+
+## Repository Highlights
+
+* End-to-end ML pipeline
+* Automated candidate ranking
+* Explainable prediction engine
+* Interactive scientific dashboard
+* Cloud deployment on Render
+* Scientific report generation
+* Citation-ready research project
 
 ---
 
@@ -255,37 +319,7 @@ Confidence : 0.7629
 
 ---
 
-## Interactive Dashboard
-
-The project includes a Dash-powered dashboard for exploring predictions and candidate transit signals.
-
-Features:
-
-- Dataset overview
-- Model metrics
-- Prediction distribution
-- Confidence distribution
-- Confusion Matrix
-- Top-ranked candidates
-- Candidate explorer
-- Prediction Confidence
-- Global view visualization
-- Local view visualization
-- Transit statistics
-
-### Production Dashboard
-
-```bash
-python dashboard.py
-```
-
-### Development Dashboard
-
-```bash
-python dashboard_dev.py
-```
-
-### Dashboard Preview
+## Dashboard Preview
 
 ![Dashboard](assets/dashboard_full.png)
 
@@ -315,10 +349,12 @@ The dashboard includes an explainability module that converts model outputs into
 
 Example explanations:
 
-- Strong signal-to-noise ratio
-- Transit depth consistent with planetary candidates
-- Long orbital period
-- High-priority follow-up candidate
+* Model confidence is very high.
+* Strong signal-to-noise ratio.
+* Transit depth is clearly visible.
+* Transit duration is consistent with many planetary candidates.
+* Candidate has a relatively long orbital period.
+* High-priority candidate for follow-up study.
 
 #### Example
 
@@ -339,8 +375,9 @@ After inference, all processed Kepler candidates are ranked according to:
 
 The ranking pipeline generates:
 
+```text
 candidate_ranking.csv
-
+```
 containing the most promising exoplanet candidates.
 
 Example:
@@ -355,15 +392,15 @@ Example:
 
 ## System Workflow
 
-Kepler Candidate Data
+NASA Exoplanet Archive Kepler Candidate Data
 
 ↓
 
-Light Curve Processing
+Light Curve Acquisition
 
 ↓
 
-Global & Local Transit Views
+Global and Local Transit Processing
 
 ↓
 
@@ -372,6 +409,10 @@ Dual-View CNN Classification
 ↓
 
 Candidate Ranking
+
+↓
+
+Prediction Explanation
 
 ↓
 
@@ -387,14 +428,16 @@ Interactive Dashboard
 
 The pipeline automatically generates an HTML report summarizing:
 
-- Dataset statistics
-- Model performance
-- Candidate rankings
-- Scientific metrics
+* Dataset Statistics
+* Model Performance
+* Candidate Rankings
+* Scientific Metrics
 
 Output:
 
+```text
 reports/exoplanet_report.html
+```
 
 ---
 
@@ -459,8 +502,8 @@ This allows visual inspection of every processed candidate.
 ## Project Structure
 
 ```text
-├── dashboard.py
-├── dashboard_dev.py
+├── dashboard.py                     # interactive dashboard and Render deployment
+├── dashboard_basic.py               # lightweight analytics dashboard
 ├── predict.py
 ├── explain_prediction.py            # interpretable prediction explanations
 │
@@ -504,6 +547,7 @@ This allows visual inspection of every processed candidate.
 * Pandas
 * Plotly
 * Dash
+* Render
 
 ---
 
@@ -514,7 +558,6 @@ This allows visual inspection of every processed candidate.
 - Multi-class astrophysical event classification
 - NASA Exoplanet Archive integration
 - Improved candidate ranking methodology
-- Streamlit and Dash cloud deployment options
 
 ---
 
@@ -526,7 +569,7 @@ If you use this project in research or educational work, please cite it using th
 
 ## Author
 
-Nishant Nayak
+**Nishant Nayak**
 
 GitHub:
 https://github.com/nishantnayakx
