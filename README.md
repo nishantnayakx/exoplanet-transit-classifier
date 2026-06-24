@@ -308,6 +308,24 @@ Open:
 ```text
 http://127.0.0.1:8050
 ```
+
+### Prediction Explanation Engine
+
+The dashboard includes an explainability module that converts model outputs into human-readable scientific reasoning.
+
+Example explanations:
+
+- Strong signal-to-noise ratio
+- Transit depth consistent with planetary candidates
+- Long orbital period
+- High-priority follow-up candidate
+
+#### Example
+
+![Prediction Explanation](assets/dashboard_explanation.png)
+
+---
+
 ## Candidate Ranking System
 
 After inference, all processed Kepler candidates are ranked according to:
