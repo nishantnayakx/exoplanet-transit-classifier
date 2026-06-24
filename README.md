@@ -67,6 +67,8 @@ Feature Fusion → Fully Connected Layers
 
 Output → Planet Transit / False Positive
 
+![Architecture](assets/architecture_diagram.png)
+
 ---
 
 ## Features
