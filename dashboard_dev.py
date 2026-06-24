@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 from predict import predict_npz
+from explain_prediction import generate_explanation
 
 app = dash.Dash(__name__)
 server = app.server
@@ -262,6 +263,7 @@ app.layout = html.Div([
 def update_candidate(path):
 
     result = predict_npz(path)
+    explanations = generate_explanation(result)
 
     global_fig = go.Figure()
 
@@ -319,7 +321,16 @@ def update_candidate(path):
 
         html.H4(
             f"SNR: {result['snr']:.2f}"
-        )
+        ),
+        
+        html.Hr(),
+
+        html.H3("Prediction Explanation"),
+
+        html.Ul([
+            html.Li(x)
+            for x in explanations
+        ])
 
     ])
 
