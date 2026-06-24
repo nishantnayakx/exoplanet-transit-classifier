@@ -1,3 +1,7 @@
+![Python](https://img.shields.io/badge/Python-3.11+-blue)
+![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-red)
+![Dash](https://img.shields.io/badge/Dash-Interactive%20Dashboard-green)
+![License](https://img.shields.io/badge/License-MIT-yellow) 
 # Exoplanet Transit Classifier
 
 ## Overview
@@ -11,6 +15,59 @@ The project processes phase-folded light curves, extracts global and local trans
 
 The repository includes data processing, model training, evaluation, inference, and an interactive dashboard for visualization.
 
+---
+
+## Live Demo
+
+Production Dashboard:
+
+https://exoplanet-transit-classifier.onrender.com
+
+---
+
+## Dashboard Versions
+
+### Production Dashboard (`dashboard.py`)
+
+The production dashboard is deployed on Render and optimized for cloud hosting.
+
+Features:
+
+* Dataset Overview
+* Prediction Distribution
+* Confidence Distribution
+* Candidate Rankings
+* ROC Curve
+* Precision-Recall Curve
+* Confusion Matrix
+* Architecture Diagram
+
+Run locally:
+
+```bash
+python dashboard.py
+```
+
+---
+
+### Development Dashboard (`dashboard_dev.py`)
+
+The development dashboard provides the complete research interface.
+
+Additional Features:
+
+* Real-time candidate inference
+* Candidate Explorer
+* Global View visualization
+* Local View visualization
+* Transit statistics inspection
+* Prediction explanation support
+
+Run locally:
+
+```bash
+python dashboard_dev.py
+```
 ---
 
 ## Problem Statement
@@ -40,6 +97,17 @@ Each processed sample contains:
 * Transit Depth
 * Signal-to-Noise Ratio (SNR)
 
+---
+
+## Installation
+
+```bash
+git clone https://github.com/nishantnayakx/exoplanet-transit-classifier.git
+
+cd exoplanet-transit-classifier
+
+pip install -r requirements.txt
+```
 ---
 
 ## Model Architecture
@@ -86,6 +154,17 @@ Output → Planet Transit / False Positive
 
 ---
 
+## Research Highlights
+
+- Developed a dual-view CNN for exoplanet transit classification.
+- Achieved ROC-AUC of 0.8424.
+- Ranked 943 processed Kepler candidates.
+- Generated scientific candidate rankings using astrophysical metrics.
+- Built an interactive Dash dashboard.
+- Deployed a cloud-hosted dashboard on Render.
+
+---
+
 ## Results
 
 Model Evaluation:
@@ -115,6 +194,21 @@ Model Evaluation:
 ```
 
 Overall Accuracy: **80%**
+
+---
+
+## Top Scientific Candidate
+
+| Rank | Candidate | Confidence | Scientific Score |
+|------|------------|------------|------------------|
+| 1 | 4455231_K01332.03 | 93.35% | 0.8405 |
+
+Characteristics:
+
+- Period: 56.64 days
+- Duration: 6.17 hours
+- Transit Depth: 589.7 ppm
+- SNR: 20.9
 
 ---
 
@@ -179,15 +273,21 @@ Features:
 - Local view visualization
 - Transit statistics
 
-### Dashboard Preview
-
-![Dashboard](assets/dashboard_full.png)
-
-Launch the dashboard:
+### Production Dashboard
 
 ```bash
 python dashboard.py
 ```
+
+### Development Dashboard
+
+```bash
+python dashboard_dev.py
+```
+
+### Dashboard Preview
+
+![Dashboard](assets/dashboard_full.png)
 
 Features:
 
@@ -232,6 +332,36 @@ Example:
 | 1 | K01332.03 | 0.9335 |
 | 2 | K01306.04 | 0.9271 |
 | 3 | K00806.03 | 0.9263 |
+
+---
+
+## System Workflow
+
+Kepler Candidate Data
+
+↓
+
+Light Curve Processing
+
+↓
+
+Global & Local Transit Views
+
+↓
+
+Dual-View CNN Classification
+
+↓
+
+Candidate Ranking
+
+↓
+
+Scientific Report Generation
+
+↓
+
+Interactive Dashboard
 
 ---
 
@@ -311,27 +441,37 @@ This allows visual inspection of every processed candidate.
 ## Project Structure
 
 ```text
-data/
-assets/
-├── confusion_matrix.png
-├── roc_curve.png
-├── pr_curve.png
-├── dashboard_full.png
-models/
-
-01_download_catalog.py
-02_download_lightcurves.py
-03_train_classifier.py
-04_evaluate_classifier.py
-05_predict.py
-06_evaluate_model.py
-07_rank_candidates.py      # ranks candidates by confidence and scientific score
-08_export_report.py
-09_explain_prediction.py   # interpretable prediction explanations
-candidate_ranking.csv      # ranked output of all candidates
-predict.py
-dashboard.py
-README.md
+├── dashboard.py
+├── dashboard_dev.py
+├── predict.py
+│
+├── candidate_ranking.csv            # ranked output of all candidates
+│
+├── reports/
+│   └── exoplanet_report.html
+│
+├── data/
+├── assets/
+│   ├── architecture_diagram.png
+│   ├── dashboard_full.png
+│   ├── confusion_matrix.png
+│   ├── roc_curve.png
+│   └── pr_curve.png
+├── models/
+|
+├── 01_download_catalog.py
+├── 02_download_lightcurves.py
+├── 03_train_classifier.py
+├── 04_evaluate_classifier.py
+├── 05_predict.py
+├── 06_evaluate_model.py
+├── 07_rank_candidates.py            # ranks candidates by confidence and scientific score
+├── 08_export_report.py
+├── 09_explain_prediction.py         # interpretable prediction explanations
+│
+├── README.md
+├── LICENSE
+└── CITATION.cff
 ```
 
 ---
@@ -349,12 +489,18 @@ README.md
 
 ## Future Improvements
 
-* Larger dataset collection
-* Hyperparameter optimization
-* Explainable AI methods
-* Additional astrophysical features
-* Cloud deployment
-* Multi-class classification
+- SHAP-based model explainability
+- Automated transit visualization generation
+- Multi-class astrophysical event classification
+- NASA Exoplanet Archive integration
+- Improved candidate ranking methodology
+- Streamlit and Dash cloud deployment options
+
+---
+
+## Citation
+
+If you use this project in research or educational work, please cite it using the provided CITATION.cff file.
 
 ---
 
