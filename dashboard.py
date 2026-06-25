@@ -77,6 +77,26 @@ ranking_fig.update_layout(
     yaxis={"categoryorder": "total ascending"}
 )
 
+scatter_fig = px.scatter(
+    ranking_df,
+    x="confidence",
+    y="scientific_score",
+    color="prediction",
+    hover_data=[
+        "file",
+        "period_days",
+        "duration_hours",
+        "depth_ppm",
+        "snr"
+    ],
+    title="Confidence vs Scientific Score"
+)
+
+scatter_fig.update_layout(
+    xaxis_title="Prediction Confidence",
+    yaxis_title="Scientific Score"
+)
+
 scientific_fig = px.bar(
     ranking_df.head(20),
     x="file",
@@ -193,10 +213,16 @@ app.layout = html.Div([
 
     html.Hr(),
 
-    html.H2("Top 20 Ranked Candidates"),
+    html.H2("Top Ranked Candidates"),
 
     dcc.Graph(
     figure=ranking_fig
+    ),
+
+    html.H2("Scientific Candidate Analysis"),
+
+    dcc.Graph(
+        figure=scatter_fig
     ),
 
     html.Table(
