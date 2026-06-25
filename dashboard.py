@@ -2,7 +2,7 @@ import os
 import glob
 
 import dash
-from dash import dcc, html, Input, Output
+from dash import dcc, html, Input, Output, dash_table
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
@@ -225,39 +225,67 @@ app.layout = html.Div([
         figure=scatter_fig
     ),
 
-    html.Table(
+    dash_table.DataTable(
 
-        [
-            html.Tr([
-                html.Th("Rank"),
-                html.Th("File"),
-                html.Th("Prediction"),
-                html.Th("Confidence"),
-                html.Th("Scientific Score"),
-                html.Th("Period"),
-                html.Th("Duration"),
-                html.Th("Depth"),
-                html.Th("SNR")
-            ])
-        ]
+        data=top20_df.to_dict("records"),
 
-        +
+        columns=[
+            {"name": i, "id": i}
+            for i in top20_df.columns
+        ],
 
-        [
-            html.Tr([
-                html.Td(row["rank"]),
-                html.Td(row["file"]),
-                html.Td(row["prediction"]),
-                html.Td(round(row["confidence"],4)),
-                html.Td(round(row["scientific_score"],4)),
-                html.Td(round(row["period_days"],2)),
-                html.Td(round(row["duration_hours"],2)),
-                html.Td(round(row["depth_ppm"],2)),
-                html.Td(round(row["snr"],2))
-            ])
+        page_size=20,
 
-            for _, row in top20_df.iterrows()
-        ]
+        sort_action="native",
+
+        filter_action="native",
+
+        style_table={
+            "overflowX": "auto"
+        },
+
+        style_cell={
+            "textAlign": "left",
+            "padding": "8px"
+        },
+
+        style_header={
+            "fontWeight": "bold"
+        }
+    ),
+
+    html.Hr(),
+
+    html.H2("Candidate Explorer"),
+
+    dcc.Dropdown(
+        id="candidate-dropdown",
+
+        options=[
+            {
+                "label": os.path.basename(f),
+                "value": f
+            }
+            for f in files
+        ],
+
+        value=files[0]
+    ),
+
+    html.Br(),
+
+    html.Div(
+        id="prediction-output"
+    ),
+
+    html.Br(),
+
+    dcc.Graph(
+        id="global-view-graph"
+    ),
+
+    dcc.Graph(
+        id="local-view-graph"
     ),
 
     html.Hr(),
@@ -295,37 +323,14 @@ app.layout = html.Div([
 
     html.Hr(),
 
-    html.H2("Candidate Explorer"),
+    html.H2("System Architecture"),
 
-    dcc.Dropdown(
-        id="candidate-dropdown",
-
-        options=[
-            {
-                "label": os.path.basename(f),
-                "value": f
-            }
-            for f in files
-        ],
-
-        value=files[0]
+    html.Img(
+        src="/assets/architecture_diagram.png",
+        style={
+            "width": "1000px"
+        }
     ),
-
-    html.Br(),
-
-    html.Div(
-        id="prediction-output"
-    ),
-
-    html.Br(),
-
-    dcc.Graph(
-        id="global-view-graph"
-    ),
-
-    dcc.Graph(
-        id="local-view-graph"
-    )
 
 ])
 
