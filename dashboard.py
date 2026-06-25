@@ -65,6 +65,18 @@ confidence_fig = px.histogram(
     title="Confidence Distribution"
 )
 
+ranking_fig = px.bar(
+    top20_df.head(10),
+    x="scientific_score",
+    y="file",
+    orientation="h",
+    title="Top 10 Scientific Candidates"
+)
+
+ranking_fig.update_layout(
+    yaxis={"categoryorder": "total ascending"}
+)
+
 scientific_fig = px.bar(
     ranking_df.head(20),
     x="file",
@@ -73,6 +85,59 @@ scientific_fig = px.bar(
 )
 
 app.layout = html.Div([
+
+        html.Div([
+
+        html.Div([
+            html.H3("943"),
+            html.P("Total Samples")
+        ], style={
+            "padding": "20px",
+            "border": "1px solid #ddd",
+            "borderRadius": "10px",
+            "textAlign": "center",
+            "width": "220px"
+        }),
+
+        html.Div([
+            html.H3("593"),
+            html.P("Planet Transits")
+        ], style={
+            "padding": "20px",
+            "border": "1px solid #ddd",
+            "borderRadius": "10px",
+            "textAlign": "center",
+            "width": "220px"
+        }),
+
+        html.Div([
+            html.H3("350"),
+            html.P("False Positives")
+        ], style={
+            "padding": "20px",
+            "border": "1px solid #ddd",
+            "borderRadius": "10px",
+            "textAlign": "center",
+            "width": "220px"
+        }),
+
+        html.Div([
+            html.H3("0.8424"),
+            html.P("ROC-AUC")
+        ], style={
+            "padding": "20px",
+            "border": "1px solid #ddd",
+            "borderRadius": "10px",
+            "textAlign": "center",
+            "width": "220px"
+        }),
+
+    ], style={
+        "display": "flex",
+        "gap": "20px",
+        "justifyContent": "center",
+        "marginBottom": "30px"
+    }),
 
     html.H1(
         "Exoplanet Transit Classifier Dashboard"
@@ -129,6 +194,10 @@ app.layout = html.Div([
     html.Hr(),
 
     html.H2("Top 20 Ranked Candidates"),
+
+    dcc.Graph(
+    figure=ranking_fig
+    ),
 
     html.Table(
 
