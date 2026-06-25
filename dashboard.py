@@ -11,6 +11,7 @@ import numpy as np
 from predict import predict_npz
 from explain_prediction import generate_explanation
 
+
 app = dash.Dash(__name__)
 server = app.server
 
@@ -103,6 +104,16 @@ scientific_fig = px.bar(
     y="scientific_score",
     title="Top Scientific Candidates",
 )
+
+CARD_STYLE = {
+    "padding": "15px",
+    "border": "1px solid #ddd",
+    "borderRadius": "10px",
+    "textAlign": "center",
+    "width": "180px",
+    "backgroundColor": "#f8f9fa",
+    "boxShadow": "0px 2px 4px rgba(0,0,0,0.08)"
+}
 
 app.layout = html.Div([
 
@@ -225,6 +236,18 @@ app.layout = html.Div([
         figure=scatter_fig
     ),
 
+    html.Button(
+        "Download Candidate Rankings CSV",
+        id="download-btn",
+        style={
+            "marginBottom": "20px"
+        }
+    ),
+
+    dcc.Download(
+        id="download-csv"
+    ),
+
     dash_table.DataTable(
 
         data=top20_df.to_dict("records"),
@@ -269,7 +292,9 @@ app.layout = html.Div([
             for f in files
         ],
 
-        value=files[0]
+        value=files[0],
+        searchable=True,
+        placeholder="Search candidate..."
     ),
 
     html.Br(),
@@ -347,158 +372,218 @@ app.layout = html.Div([
 )
 def update_candidate(path):
 
-    filename = os.path.basename(path)
+    try:
 
-    row = ranking_df[
-        ranking_df["file"] == filename
-    ].iloc[0]
+        result = predict_npz(path)
+        
+        filename = os.path.basename(path)
 
-    data = np.load(path, allow_pickle=True)
+        row = ranking_df[
+            ranking_df["file"] == filename
+        ].iloc[0]
 
-    explanations = []
 
-    if row["confidence"] > 0.90:
-        explanations.append(
-            "Model confidence is very high."
+        explanations = []
+
+        if row["confidence"] > 0.90:
+            explanations.append(
+                "Model confidence is very high."
+            )
+        elif row["confidence"] > 0.75:
+            explanations.append(
+                "Model confidence is moderate."
+            )
+        else:
+            explanations.append(
+                "Model confidence is low."
+            )
+
+        if row["snr"] > 20:
+            explanations.append(
+                "Strong signal-to-noise ratio."
+            )
+        elif row["snr"] > 10:
+            explanations.append(
+                "Acceptable signal-to-noise ratio."
+            )
+        else:
+            explanations.append(
+                "Weak signal-to-noise ratio."
+            )
+
+        if row["depth_ppm"] > 500:
+            explanations.append(
+                "Transit depth is clearly visible."
+            )
+        else:
+            explanations.append(
+                "Transit depth is relatively shallow."
+            )
+
+        if row["duration_hours"] < 10:
+            explanations.append(
+                "Transit duration is consistent with many planetary candidates."
+            )
+        else:
+            explanations.append(
+                "Transit duration is unusually long."
+            )
+
+        if row["period_days"] > 30:
+            explanations.append(
+                "Candidate has a relatively long orbital period."
+            )
+        elif row["period_days"] > 10:
+            explanations.append(
+                "Candidate has a moderate orbital period."
+            )
+        else:
+            explanations.append(
+                "Candidate has a short orbital period."
+            )
+
+        if row["scientific_score"] > 0.80:
+            explanations.append(
+                "High-priority candidate for follow-up study."
+            )
+        elif row["scientific_score"] > 0.60:
+            explanations.append(
+                "Moderately interesting candidate."
+            )
+        else:
+            explanations.append(
+                "Low-priority candidate."
+            )
+
+        global_fig = go.Figure()
+
+        global_fig.add_trace(
+            go.Scatter(
+                y=result["global_view"],
+                mode="lines",
+                name="Global View"
+            )
         )
-    elif row["confidence"] > 0.75:
-        explanations.append(
-            "Model confidence is moderate."
-        )
-    else:
-        explanations.append(
-            "Model confidence is low."
+
+        global_fig.update_layout(
+            title="Global Transit View"
         )
 
-    if row["snr"] > 20:
-        explanations.append(
-            "Strong signal-to-noise ratio."
-        )
-    elif row["snr"] > 10:
-        explanations.append(
-            "Acceptable signal-to-noise ratio."
-        )
-    else:
-        explanations.append(
-            "Weak signal-to-noise ratio."
+        local_fig = go.Figure()
+
+        local_fig.add_trace(
+            go.Scatter(
+                y=result["local_view"],
+                mode="lines",
+                name="Local View"
+            )
         )
 
-    if row["depth_ppm"] > 500:
-        explanations.append(
-            "Transit depth is clearly visible."
+        local_fig.update_layout(
+            title="Local Transit View"
         )
-    else:
-        explanations.append(
-            "Transit depth is relatively shallow."
-        )
+        
+        pred_text = html.Div([
 
-    if row["duration_hours"] < 10:
-        explanations.append(
-            "Transit duration is consistent with many planetary candidates."
-        )
-    else:
-        explanations.append(
-            "Transit duration is unusually long."
-        )
+            html.Div([
 
-    if row["period_days"] > 30:
-        explanations.append(
-            "Candidate has a relatively long orbital period."
-        )
-    elif row["period_days"] > 10:
-        explanations.append(
-            "Candidate has a moderate orbital period."
-        )
-    else:
-        explanations.append(
-            "Candidate has a short orbital period."
-        )
+                html.Div([
+                    html.H6("Prediction"),
+                    html.H4(result["prediction"])
+                ], style=CARD_STYLE),
 
-    if row["scientific_score"] > 0.80:
-        explanations.append(
-            "High-priority candidate for follow-up study."
-        )
-    elif row["scientific_score"] > 0.60:
-        explanations.append(
-            "Moderately interesting candidate."
-        )
-    else:
-        explanations.append(
-            "Low-priority candidate."
-        )
+                html.Div([
+                    html.H6("Confidence"),
+                    html.H4(f"{result['confidence']:.2%}")
+                ], style=CARD_STYLE),
 
-    global_fig = go.Figure()
+                html.Div([
+                    html.H6("Scientific Score"),
+                    html.H4(f"{result['scientific_score']:.4f}")
+                ], style=CARD_STYLE),
 
-    global_fig.add_trace(
-        go.Scatter(
-            y=data["global_view"],
-            mode="lines"
-        )
-    )
+                html.Div([
+                    html.H6("SNR"),
+                    html.H4(f"{result['snr']:.2f}")
+                ], style=CARD_STYLE),
 
-    global_fig.update_layout(
-        title="Global View (201 bins)"
-    )
+            ], style={
+                "display": "flex",
+                "gap": "20px",
+                "justifyContent": "center",
+                "flexWrap": "wrap"
+            }),
 
-    local_fig = go.Figure()
+            html.Br(),
 
-    local_fig.add_trace(
-        go.Scatter(
-            y=data["local_view"],
-            mode="lines"
-        )
-    )
+            html.Div([
 
-    local_fig.update_layout(
-        title="Local View (61 bins)"
-    )
+                html.Div([
+                    html.H6("Period (days)"),
+                    html.H4(f"{result['period_days']:.2f}")
+                ], style=CARD_STYLE),
 
-    pred_text = html.Div([
+                html.Div([
+                    html.H6("Duration (hours)"),
+                    html.H4(f"{result['duration_hours']:.2f}")
+                ], style=CARD_STYLE),
 
-        html.H3(
-            f"Prediction: {row['prediction']}"
-        ),
+                html.Div([
+                    html.H6("Depth (ppm)"),
+                    html.H4(f"{result['depth_ppm']:.1f}")
+                ], style=CARD_STYLE),
 
-        html.H4(
-            f"Confidence: {row['confidence']:.4f}"
-        ),
+            ], style={
+                "display": "flex",
+                "gap": "20px",
+                "justifyContent": "center",
+                "flexWrap": "wrap"
+            }),
 
-        html.H4(
-            f"Scientific Score: {row['scientific_score']:.4f}"
-        ),
+            html.Hr(),
 
-        html.H4(
-            f"Period: {row['period_days']:.4f} days"
-        ),
+            html.H3("Prediction Explanation"),
 
-        html.H4(
-            f"Duration: {row['duration_hours']:.4f} hours"
-        ),
+            html.Ul([
+                html.Li(x)
+                for x in explanations
+            ])
 
-        html.H4(
-            f"Depth: {row['depth_ppm']:.2f} ppm"
-        ),
-
-        html.H4(
-            f"SNR: {row['snr']:.2f}"
-        ),
-
-        html.Hr(),
-
-        html.H3(
-            "Prediction Explanation"
-        ),
-
-        html.Ul([
-            html.Li(x)
-            for x in explanations
         ])
-    ])
 
-    return (
+        return (
         pred_text,
         global_fig,
         local_fig
+    )
+
+    except Exception as e:
+
+        print("CALLBACK ERROR:", e)
+
+        return (
+            html.Div(f"ERROR: {e}"),
+            go.Figure(),
+            go.Figure()
+        )
+
+@app.callback(
+    Output(
+        "download-csv",
+        "data"
+    ),
+
+    Input(
+        "download-btn",
+        "n_clicks"
+    ),
+
+    prevent_initial_call=True
+)
+def download_csv(n_clicks):
+
+    return dcc.send_file(
+        "candidate_ranking.csv"
     )
 
 if __name__ == "__main__":

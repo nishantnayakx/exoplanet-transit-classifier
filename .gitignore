@@ -1,9 +1,12 @@
+venv/
 __pycache__/
 *.pyc
 
 
 .vscode/
-
+.idea/
+.env
+.DS_Store
 dashboard_v1_backup.py
 
 __pycache__/
