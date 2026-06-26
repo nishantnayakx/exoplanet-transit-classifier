@@ -115,53 +115,101 @@ CARD_STYLE = {
     "boxShadow": "0px 2px 4px rgba(0,0,0,0.08)"
 }
 
+METRIC_CARD_STYLE = {
+    "padding": "20px",
+    "border": "1px solid #ddd",
+    "borderRadius": "12px",
+    "textAlign": "center",
+    "width": "220px",
+    "backgroundColor": "white",
+    "boxShadow": "0px 4px 10px rgba(0,0,0,0.12)"
+}
+
 app.layout = html.Div([
 
+         html.Div([
+
+            html.H1(
+                "Exoplanet Transit Classifier",
+                style={
+                    "textAlign": "center",
+                    "marginBottom": "10px"
+                }
+            ),
+
+            html.P(
+                "An interactive dashboard for deep learning-based exoplanet transit detection and scientific candidate ranking using Kepler light curve data.",
+                style={
+                    "textAlign": "center",
+                    "fontSize": "18px",
+                    "color": "gray"
+                }
+            ),
+
+            html.Div([
+
+                html.A(
+                    "GitHub Repository",
+                    href="https://github.com/nishantnayakx/exoplanet-transit-classifier",
+                    target="_blank",
+                    style={
+                        "padding": "10px 20px",
+                        "border": "1px solid #007bff",
+                        "borderRadius": "8px",
+                        "textDecoration": "none"
+                    }
+                ),
+
+                html.A(
+                    "Live Dashboard",
+                    href="https://exoplanet-transit-classifier.onrender.com/",
+                    target="_blank",
+                    style={
+                        "padding": "10px 20px",
+                        "border": "1px solid #28a745",
+                        "borderRadius": "8px",
+                        "textDecoration": "none"
+                    }
+                ),
+
+            ], style={
+                "display": "flex",
+                "gap": "20px",
+                "justifyContent": "center",
+                "marginTop": "15px",
+                "marginBottom": "30px"
+            })
+
+        ]),
+
+
         html.Div([
 
         html.Div([
-            html.H3("943"),
+            html.H3(f"{len(ranking_df)}"),
             html.P("Total Samples")
-        ], style={
-            "padding": "20px",
-            "border": "1px solid #ddd",
-            "borderRadius": "10px",
-            "textAlign": "center",
-            "width": "220px"
-        }),
+        ], style=METRIC_CARD_STYLE),
 
         html.Div([
-            html.H3("593"),
+            html.H3(
+                f"{(ranking_df['prediction']=='planet_transit').sum()}"
+            ),
             html.P("Planet Transits")
-        ], style={
-            "padding": "20px",
-            "border": "1px solid #ddd",
-            "borderRadius": "10px",
-            "textAlign": "center",
-            "width": "220px"
-        }),
+        ], style=METRIC_CARD_STYLE),
+
 
         html.Div([
-            html.H3("350"),
+            html.H3(
+                f"{(ranking_df['prediction']=='false_positive').sum()}"
+            ),
             html.P("False Positives")
-        ], style={
-            "padding": "20px",
-            "border": "1px solid #ddd",
-            "borderRadius": "10px",
-            "textAlign": "center",
-            "width": "220px"
-        }),
+        ], style=METRIC_CARD_STYLE),
+
 
         html.Div([
             html.H3("0.8424"),
             html.P("ROC-AUC")
-        ], style={
-            "padding": "20px",
-            "border": "1px solid #ddd",
-            "borderRadius": "10px",
-            "textAlign": "center",
-            "width": "220px"
-        }),
+        ], style=METRIC_CARD_STYLE),
 
     ], style={
         "display": "flex",
@@ -169,10 +217,7 @@ app.layout = html.Div([
         "justifyContent": "center",
         "marginBottom": "30px"
     }),
-
-    html.H1(
-        "Exoplanet Transit Classifier Dashboard"
-    ),
+    
 
     html.Hr(),
 
@@ -375,7 +420,7 @@ def update_candidate(path):
     try:
 
         result = predict_npz(path)
-        
+
         filename = os.path.basename(path)
 
         row = ranking_df[
