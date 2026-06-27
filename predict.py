@@ -94,42 +94,37 @@ print("Model loaded successfully")
 
 def predict_npz(path):
 
-    print("A")
+    print("1")
     d = np.load(path, allow_pickle=True)
 
-    print("B")
+    print("2")
 
     global_view = torch.tensor(
         d["global_view"],
         dtype=torch.float32
     ).unsqueeze(0)
 
-    print("C")
+    print("3")
 
     local_view = torch.tensor(
         d["local_view"],
         dtype=torch.float32
     ).unsqueeze(0)
 
-    print("D")
+    print("4")
 
     scalars = torch.tensor([[
-
         np.log1p(float(d["period"])) / 5.0,
-
         float(d["duration_hrs"]) / 24.0,
-
         np.log1p(max(float(d["depth_ppm"]), 0)) / 12.0,
-
         np.log1p(max(float(d["snr"]), 0)) / 8.0
-
     ]], dtype=torch.float32)
 
-    print("E")
+    print("5")
 
     with torch.no_grad():
 
-        print("F")
+        print("6 before model")
 
         logits = model(
             global_view,
@@ -137,20 +132,34 @@ def predict_npz(path):
             scalars
         )
 
-        print("G")
+        print("7 after model")
 
         probs = torch.softmax(logits, dim=1)[0]
 
-        print("H")
+    print("8")
 
     pred_idx = probs.argmax().item()
 
-    print("I")
+    print("9")
+
+    scientific_score = (
+        min(float(d["snr"]) / 20.0, 1.0) * 0.4 +
+        min(float(d["depth_ppm"]) / 1000.0, 1.0) * 0.3 +
+        min(float(d["duration_hrs"]) / 10.0, 1.0) * 0.3
+    )
+
+    print("10")
 
     return {
         "prediction": idx_to_label[pred_idx],
         "confidence": float(probs[pred_idx]),
-        "scientific_score": 0,
+        "scientific_score": scientific_score,
+
+        "period_days": float(d["period"]),
+        "duration_hours": float(d["duration_hrs"]),
+        "depth_ppm": float(d["depth_ppm"]),
+        "snr": float(d["snr"]),
+
         "global_view": d["global_view"].tolist(),
         "local_view": d["local_view"].tolist()
     }
