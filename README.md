@@ -688,6 +688,18 @@ exoplanet-transit-classifier/
 │   ├── roc_curve.png
 │   ├── pr_curve.png
 │   └── screenshots/
+│       ├── dashboard_home.png
+│       ├── model_metrics.png
+│       ├── prediction_distribution.png
+│       ├── confidence_distribution.png
+│       ├── highest_scientific_candidates.png
+│       ├── top_ranked_candidates.png
+│       ├── scientific_candidate_analysis.png
+│       ├── candidate_rankings.png
+│       ├── candidate_explorer.png
+│       ├── prediction_explanation.png
+│       ├── global_transit_curve.png
+│       └── local_transit_curve.png
 │    
 ├── data/                       # Processed Kepler dataset
 ├── models/                     # Trained CNN weights
