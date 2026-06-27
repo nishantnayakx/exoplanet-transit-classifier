@@ -994,23 +994,32 @@ app.layout = html.Div([
 )
 def update_candidate(path):
 
-    print("=" * 50)
-    print("STEP 1")
-    print("Selected file:", path)
-    print("=" * 50)
+    print("=" * 60)
+    print("STEP 2")
+    print(path)
+
+    result = predict_npz(path)
+
+    print("predict_npz finished")
 
     return (
-        html.Div(
-            "HELLO FROM CALLBACK",
-            style={
-                "fontSize": "28px",
-                "color": "green"
-            }
-        ),
+
+        html.Div([
+
+            html.H2("Prediction Test"),
+
+            html.P(result["prediction"]),
+
+            html.P(result["confidence"])
+
+        ]),
+
         go.Figure(),
+
         go.Figure()
+
     )
-    
+
 @app.callback(
     Output(
         "download-csv",
