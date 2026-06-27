@@ -994,70 +994,23 @@ app.layout = html.Div([
 )
 def update_candidate(path):
 
-    print("=" * 60)
-    print("PHASE A START")
-    print("Selected:", path)
-
-    result = predict_npz(path)
-
-    print("Prediction completed")
-
-    global_fig = go.Figure()
-
-    global_fig.add_trace(
-        go.Scatter(
-            y=result["global_view"],
-            mode="lines",
-            name="Global View"
-        )
-    )
-
-    global_fig.update_layout(
-        title="Global Transit View"
-    )
-
-    print("Global graph created")
-
-    local_fig = go.Figure()
-
-    local_fig.add_trace(
-        go.Scatter(
-            y=result["local_view"],
-            mode="lines",
-            name="Local View"
-        )
-    )
-
-    local_fig.update_layout(
-        title="Local Transit View"
-    )
-
-    print("Local graph created")
-
-    pred_text = html.Div([
-
-        html.H3("Prediction Test"),
-
-        html.H2(result["prediction"]),
-
-        html.P(
-            f"Confidence : {result['confidence']:.2%}"
-        )
-
-    ])
-
-    print("Returning callback")
+    print("=" * 50)
+    print("STEP 1")
+    print("Selected file:", path)
+    print("=" * 50)
 
     return (
-
-        pred_text,
-
-        global_fig,
-
-        local_fig
-
+        html.Div(
+            "HELLO FROM CALLBACK",
+            style={
+                "fontSize": "28px",
+                "color": "green"
+            }
+        ),
+        go.Figure(),
+        go.Figure()
     )
-
+    
 @app.callback(
     Output(
         "download-csv",
