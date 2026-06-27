@@ -1022,27 +1022,6 @@ def update_candidate(path):
 
     )
 
-    except Exception as e:
-
-        import traceback
-
-        traceback.print_exc()
-
-        print("========== CALLBACK FAILED ==========")
-        print(str(e))
-
-        return (
-            html.Div([
-                html.H3(
-                    "Candidate Explorer Error",
-                    style={"color": "red"}
-                ),
-                html.Pre(str(e))
-            ]),
-            go.Figure(),
-            go.Figure()
-        )
-
 @app.callback(
     Output(
         "download-csv",
