@@ -89,6 +89,8 @@ model.load_state_dict(
 
 model.eval()
 
+print("Model loaded successfully")
+
 
 def predict_npz(path):
 
@@ -128,6 +130,9 @@ def predict_npz(path):
         min(float(d["depth_ppm"]) / 1000.0, 1.0) * 0.3 +
         min(float(d["duration_hrs"]) / 10.0, 1.0) * 0.3
     )
+
+    print("Global view length:", len(d["global_view"]))
+    print("Local view length:", len(d["local_view"]))
 
     return {
     "prediction": idx_to_label[pred_idx],

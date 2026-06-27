@@ -17,6 +17,20 @@ server = app.server
 
 DATA_DIR = "data/processed"
 
+print("=" * 60)
+print("Dashboard starting...")
+print("Current working directory:", os.getcwd())
+print("DATA_DIR:", DATA_DIR)
+print("Exists:", os.path.exists(DATA_DIR))
+
+if os.path.exists(DATA_DIR):
+    print("Files found:", len(glob.glob(os.path.join(DATA_DIR, "*.npz"))))
+    print(glob.glob(os.path.join(DATA_DIR, "*.npz"))[:5])
+else:
+    print("DATA DIRECTORY NOT FOUND!")
+
+print("=" * 60)
+
 files = sorted(
     glob.glob(
         os.path.join(DATA_DIR, "*.npz")
@@ -26,6 +40,7 @@ files = sorted(
 ranking_df = pd.read_csv(
     "candidate_ranking.csv"
 )
+
 
 top20_df = ranking_df.head(20)
 
@@ -979,8 +994,10 @@ app.layout = html.Div([
 )
 def update_candidate(path):
 
-    print("========== CALLBACK STARTED ==========")
+    print("=" * 50)
+    print("Callback triggered")
     print("Selected path:", path)
+    print("=" * 50)
 
     try:
 
