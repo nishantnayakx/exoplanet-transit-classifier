@@ -299,11 +299,11 @@ A concentration of predictions at higher confidence values indicates that the cl
 
 ---
 
-## ⭐ Scientific Candidate Ranking
+## ⭐ Highest Scientific Candidates Ranking
 
 <p align="center">
 
-<img src="assets/screenshots/scientific_ranking.png" width="100%">
+<img src="assets/screenshots/highest_scientific_candidates.png" width="100%">
 
 </p>
 
@@ -430,7 +430,7 @@ This improves model transparency and interpretability.
 
 <p align="center">
 
-<img src="assets/screenshots/global_curve.png" width="100%">
+<img src="assets/screenshots/global_transit_curve.png" width="100%">
 
 </p>
 
@@ -444,7 +444,7 @@ This representation provides the overall transit behaviour observed across the c
 
 <p align="center">
 
-<img src="assets/screenshots/local_curve.png" width="100%">
+<img src="assets/screenshots/local_transit_curve.png" width="100%">
 
 </p>
 
