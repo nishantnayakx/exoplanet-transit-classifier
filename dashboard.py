@@ -979,15 +979,26 @@ app.layout = html.Div([
 )
 def update_candidate(path):
 
+    print("========== CALLBACK STARTED ==========")
+    print("Selected path:", path)
+
     try:
 
         result = predict_npz(path)
 
+        print("predict_npz() completed")
+
+        print("Prediction finished")
+
         filename = os.path.basename(path)
+
+        print("Filename:", filename)
 
         row = ranking_df[
             ranking_df["file"] == filename
         ].iloc[0]
+
+        print("Ranking row loaded")
 
 
         explanations = []
@@ -1091,6 +1102,8 @@ def update_candidate(path):
             title="Global Transit View"
         )
 
+        print("Global graph finished")
+
         local_fig = go.Figure()
 
         local_fig.add_trace(
@@ -1104,6 +1117,8 @@ def update_candidate(path):
         local_fig.update_layout(
             title="Local Transit View"
         )
+
+        print("Local graph finished")
 
         if result["scientific_score"] >= 0.85:
 
@@ -1243,6 +1258,8 @@ def update_candidate(path):
 
         ])
 
+        print("Returning callback")
+
         return (
         pred_text,
         global_fig,
@@ -1251,10 +1268,21 @@ def update_candidate(path):
 
     except Exception as e:
 
-        print("CALLBACK ERROR:", e)
+        import traceback
+
+        traceback.print_exc()
+
+        print("========== CALLBACK FAILED ==========")
+        print(str(e))
 
         return (
-            html.Div(f"ERROR: {e}"),
+            html.Div([
+                html.H3(
+                    "Candidate Explorer Error",
+                    style={"color": "red"}
+                ),
+                html.Pre(str(e))
+            ]),
             go.Figure(),
             go.Figure()
         )
