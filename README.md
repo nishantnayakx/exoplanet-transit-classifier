@@ -1,575 +1,947 @@
-# Exoplanet Transit Classifier
-![Python](https://img.shields.io/badge/Python-3.11+-blue)
-![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-red)
-![Dash](https://img.shields.io/badge/Dash-Interactive%20Dashboard-green)
-![License](https://img.shields.io/badge/License-MIT-yellow) 
+# 🪐 Exoplanet Transit Classifier
 
-## Overview
+<h3 align="center">
+Deep Learning-Based Detection and Scientific Ranking of Exoplanet Transit Signals using NASA Kepler Light Curve Data
+</h3>
 
-An end-to-end machine learning system for detecting exoplanet transit candidates from astronomical light-curve data using a dual-view Convolutional Neural Network (CNN).
+<p align="center">
 
-The project processes phase-folded light curves, extracts global and local transit views, combines them with astrophysical features, and classifies candidates as either:
+<a href="https://github.com/nishantnayakx/exoplanet-transit-classifier">
+<img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white">
+</a>
 
-* Planet Transit
-* False Positive
+<a href="https://exoplanet-transit-classifier.onrender.com/">
+<img src="https://img.shields.io/badge/Live-Dashboard-46E3B7?style=for-the-badge&logo=render&logoColor=white">
+</a>
 
-The repository includes data processing, model training, evaluation, inference, and an interactive dashboard for visualization.
+<img src="https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white">
 
----
+<img src="https://img.shields.io/badge/PyTorch-Deep%20Learning-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white">
 
-## Live Demo
+<img src="https://img.shields.io/badge/Dash-Interactive%20Dashboard-0A66C2?style=for-the-badge&logo=plotly&logoColor=white">
 
-Production Dashboard:
+<img src="https://img.shields.io/badge/Plotly-Visualization-3F4F75?style=for-the-badge&logo=plotly&logoColor=white">
 
-https://exoplanet-transit-classifier.onrender.com
+<img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge">
 
-The hosted dashboard includes:
-
-* Candidate Explorer
-* Prediction Explanations
-* Scientific Scoring
-* Global Transit Visualization
-* Local Transit Visualization
-* Candidate Rankings
-* Performance Metrics
-* Interactive Analytics
+</p>
 
 ---
 
-## Dashboard Versions
+## 🌍 Live Dashboard
 
-### Interactive Dashboard (`dashboard.py`)
+### 🚀 Explore the deployed application
 
-The primary dashboard is used for both local execution and Render deployment.
+**https://exoplanet-transit-classifier.onrender.com/**
 
-Features:
+---
 
-* Candidate Explorer
-* Prediction Explanation Engine
-* Scientific Score Analysis
-* Confidence Analysis
-* Transit Statistics
-* Global Transit View
-* Local Transit View
-* Candidate Ranking Explorer
-* Interactive Visual Analytics
+## 📂 GitHub Repository
 
-Run locally:
+**https://github.com/nishantnayakx/exoplanet-transit-classifier**
 
-```bash
-python dashboard.py
+---
+
+# 📖 Project Overview
+
+The **Exoplanet Transit Classifier** is an end-to-end deep learning system designed to automatically detect and analyze exoplanet transit signals from **NASA Kepler light curve observations**.
+
+Unlike traditional binary classifiers that simply output a prediction, this project provides a complete scientific analysis pipeline capable of:
+
+- detecting potential exoplanet transit events,
+- distinguishing genuine planets from false positives,
+- ranking candidates according to scientific importance,
+- generating interpretable AI explanations,
+- visualizing transit curves,
+- presenting results through a fully interactive dashboard.
+
+The project combines **Deep Learning**, **Explainable AI**, **Scientific Candidate Ranking**, and **Interactive Visualization** into a single platform intended for educational, research, and demonstration purposes.
+
+---
+
+# 🌌 Why This Project Matters
+
+The Kepler Space Telescope observed more than **150,000 stars**, collecting millions of stellar brightness measurements over several years.
+
+A planet crossing in front of its host star causes a very small decrease in brightness known as a **transit event**.
+
+Detecting these tiny brightness variations presents several challenges:
+
+- extremely weak transit signals,
+- observational noise,
+- instrumental artifacts,
+- stellar variability,
+- enormous data volume,
+- high false-positive rates.
+
+Manual inspection of every light curve is impractical.
+
+Modern astronomy increasingly relies on intelligent machine learning systems capable of rapidly identifying promising planetary candidates while minimizing false detections.
+
+---
+
+# ❓ Problem Statement
+
+Astronomers require automated systems that can:
+
+- identify planetary transit signatures,
+- distinguish planets from false positives,
+- prioritize scientifically valuable candidates,
+- provide interpretable predictions,
+- enable rapid exploration of thousands of observations.
+
+While many machine learning models focus solely on prediction accuracy, few provide an integrated platform combining **classification**, **candidate ranking**, **scientific interpretation**, and **interactive visualization**.
+
+This project addresses that gap.
+
+---
+
+# 💡 Proposed Solution
+
+This repository implements a complete **Deep Learning–based Exoplanet Analysis Pipeline**.
+
+The workflow consists of:
+
+1. Loading NASA Kepler candidate observations
+2. Preprocessing global and local light curve representations
+3. Predicting candidate class using a Dual-View CNN
+4. Computing scientific ranking scores
+5. Generating AI-based explanations
+6. Visualizing results using an interactive dashboard
+7. Exporting ranked candidates for further analysis
+
+Rather than functioning solely as a neural network classifier, the system acts as a **decision-support platform** for scientific candidate exploration.
+
+---
+
+# ✨ Key Features
+
+## 🤖 Deep Learning Classification
+
+- Dual-view Convolutional Neural Network
+- Global Transit View
+- Local Transit View
+- Planet Transit vs False Positive classification
+- PyTorch implementation
+
+---
+
+## ⭐ Scientific Candidate Ranking
+
+Every prediction is ranked using multiple astrophysical indicators, including:
+
+- Prediction confidence
+- Signal-to-noise ratio (SNR)
+- Transit depth
+- Transit duration
+- Orbital period
+- Scientific priority score
+
+This enables rapid identification of the most promising candidates for follow-up observations.
+
+---
+
+## 🧠 Explainable AI Predictions
+
+Instead of displaying only a classification result, the dashboard automatically generates natural-language explanations describing:
+
+- Model confidence
+- Signal quality
+- Transit characteristics
+- Orbital properties
+- Scientific significance
+- Overall candidate assessment
+
+This improves transparency and makes predictions easier to interpret.
+
+---
+
+## 📊 Interactive Dashboard
+
+The dashboard provides:
+
+- 📈 Model evaluation metrics
+- 🪐 Prediction distribution
+- ⭐ Scientific candidate rankings
+- 🏆 Top ranked candidates
+- 🔭 Searchable Candidate Explorer
+- 🌌 Global Transit Curve visualization
+- 🔍 Zoomed Transit Curve visualization
+- 📋 Downloadable candidate rankings (CSV)
+- 🏗️ System architecture visualization
+
+---
+
+## ☁️ Cloud Deployment
+
+The complete dashboard is deployed online using **Render**, allowing users to explore predictions directly through any modern web browser without requiring local installation.
+
+---
+
+# 🎯 Objectives
+
+The primary objectives of this project are:
+
+- Develop a robust deep learning model for exoplanet transit classification.
+- Build an intuitive scientific dashboard for candidate exploration.
+- Improve prediction interpretability using AI-generated explanations.
+- Prioritize candidates according to scientific importance.
+- Demonstrate an end-to-end machine learning workflow suitable for research and educational purposes.
+
+---
+
+# 📌 Project Highlights
+
+✅ Deep Learning powered classification
+
+✅ Explainable AI predictions
+
+✅ Scientific candidate ranking
+
+✅ Interactive Dash dashboard
+
+✅ Responsive modern user interface
+
+✅ Downloadable ranked candidate dataset
+
+✅ Cloud deployment on Render
+
+✅ Complete end-to-end ML pipeline
+
+---
+
+# 🖥️ Dashboard Showcase
+
+The project includes a fully interactive dashboard developed using **Dash** and **Plotly**, enabling users to explore model predictions, visualize transit curves, inspect scientific rankings, and evaluate overall model performance.
+
+The dashboard transforms raw machine learning predictions into an intuitive scientific exploration platform suitable for researchers, students, and astronomy enthusiasts.
+
+---
+
+# 📸 Dashboard Preview
+
+
+## 🏠 Dashboard Home
+
+<p align="center">
+
+<img src="assets/screenshots/dashboard_home.png" width="100%">
+
+</p>
+
+The homepage provides an overview of the entire project, including:
+
+- Project introduction
+- Dataset statistics
+- Model evaluation metrics
+- Scientific ranking overview
+
+---
+
+## 📊 Model Metrics
+
+<p align="center">
+
+<img src="assets/screenshots/model_metrics.png" width="100%">
+
+</p>
+
+This section summarizes the performance of the trained neural network using multiple evaluation metrics.
+
+Displayed metrics include:
+
+- Validation Accuracy
+- ROC-AUC
+- Precision
+- Recall
+- F1 Score
+
+These metrics provide an overall assessment of model reliability.
+
+---
+
+## 🪐 Prediction Distribution
+
+<p align="center">
+
+<img src="assets/screenshots/prediction_distribution.png" width="100%">
+
+</p>
+
+Visualizes how the trained classifier distributes predictions across the dataset.
+
+This allows users to quickly understand the balance between:
+
+- Planet Transit candidates
+- False Positive detections
+
+---
+
+## ⭐ Scientific Candidate Ranking
+
+<p align="center">
+
+<img src="assets/screenshots/scientific_ranking.png" width="100%">
+
+</p>
+
+Instead of simply classifying candidates, the dashboard assigns each observation a **Scientific Priority Score**.
+
+Candidates with higher scores are considered more promising for future astronomical follow-up observations.
+
+---
+
+## 🏆 Candidate Rankings
+
+<p align="center">
+
+<img src="assets/screenshots/candidate_rankings.png" width="100%">
+
+</p>
+
+An interactive ranking table provides:
+
+- Sorting
+- Searching
+- Filtering
+- CSV Export
+
+Researchers can efficiently inspect the highest-priority candidates without manually reviewing the entire dataset.
+
+---
+
+## 🔭 Candidate Explorer
+
+<p align="center">
+
+<img src="assets/screenshots/candidate_explorer.png" width="100%">
+
+</p>
+
+The Candidate Explorer is the central interactive component of the dashboard.
+
+Users can:
+
+- Search candidates
+- View prediction results
+- Inspect confidence
+- Examine scientific score
+- Analyze transit properties
+
+All outputs update dynamically when a new candidate is selected.
+
+---
+
+## 🧠 AI Prediction Explanation
+
+<p align="center">
+
+<img src="assets/screenshots/prediction_explanation.png" width="100%">
+
+</p>
+
+Rather than returning only a classification label, the dashboard generates natural-language explanations describing:
+
+- Prediction confidence
+- Signal quality
+- Transit characteristics
+- Orbital behaviour
+- Scientific significance
+- Overall recommendation
+
+This improves model transparency and interpretability.
+
+---
+
+## 🌌 Global Transit Curve
+
+<p align="center">
+
+<img src="assets/screenshots/global_curve.png" width="100%">
+
+</p>
+
+Displays the complete folded light curve used by the neural network.
+
+This representation provides the overall transit behaviour observed across the candidate.
+
+---
+
+## 🔍 Local Transit Curve
+
+<p align="center">
+
+<img src="assets/screenshots/local_curve.png" width="100%">
+
+</p>
+
+Shows a zoomed-in view centred around the transit event.
+
+This enables detailed inspection of the predicted planetary transit signature.
+
+---
+
+# 🏗️ System Architecture
+
+<p align="center">
+
+<img src="assets/architecture_diagram.png" width="95%">
+
+</p>
+
+The project follows a complete machine learning workflow:
+
+1. NASA Kepler candidate data
+2. Light curve preprocessing
+3. Global & Local transit extraction
+4. Dual-view CNN prediction
+5. Scientific candidate ranking
+6. Explainable AI
+7. Interactive dashboard
+
+The modular design allows individual components to be extended independently.
+
+---
+
+# 🔄 Machine Learning Pipeline
+
+```
+NASA Kepler NPZ Files
+            │
+            ▼
+ Data Preprocessing
+            │
+            ▼
+ Global & Local Transit Views
+            │
+            ▼
+ Dual-View CNN (PyTorch)
+            │
+            ▼
+ Planet Transit Prediction
+            │
+            ▼
+ Scientific Score Calculation
+            │
+            ▼
+ Explainable AI Generation
+            │
+            ▼
+ Interactive Dashboard
 ```
 
 ---
 
-### Analytics Dashboard (`dashboard_basic.py`)
+# 📡 Dataset
 
-Lightweight dashboard focused on model evaluation and project metrics.
+The model is trained using publicly available observations from the **NASA Kepler Mission**.
 
-Features:
+Each candidate contains:
 
-* Dataset Overview
-* Prediction Distribution
-* Confidence Distribution
-* Top Candidate Rankings
-* ROC Curve
-* Precision-Recall Curve
-* Confusion Matrix
-* Architecture Visualization
+- Folded light curves
+- Global transit representation
+- Local transit representation
+- Orbital properties
+- Transit characteristics
+- Ground-truth classification
 
-Run locally:
+These observations enable supervised learning for distinguishing genuine exoplanet transits from false positives.
 
-```bash
-python dashboard_basic.py
+---
+
+# 📦 Dataset Statistics
+
+| Property | Value |
+|-----------|------:|
+| Total Samples | 943 |
+| Planet Transit Candidates | 593 |
+| False Positives | 350 |
+| Data Source | NASA Kepler Mission |
+| File Format | NPZ |
+
+---
+
+# 🧠 Model Architecture
+
+The classifier is implemented using **PyTorch** and employs a dual-input Convolutional Neural Network.
+
+The network learns complementary information from:
+
+- Global transit curves
+- Local transit curves
+
+These feature representations are merged before the final fully connected layers generate the predicted class probabilities.
+
+This architecture enables the model to capture both long-range brightness behaviour and detailed transit characteristics simultaneously.
+
+---
+
+# 📈 Model Performance
+
+The trained Dual-View CNN demonstrates strong performance on the validation dataset while maintaining high precision for exoplanet detection.
+
+The model was evaluated using multiple complementary metrics to ensure reliable classification performance.
+
+---
+
+## 📊 Evaluation Metrics
+
+| Metric | Score |
+|---------|------:|
+| Validation Accuracy | **95.76%** |
+| ROC-AUC | **0.8424** |
+| Planet Precision | **0.9742** |
+| Planet Recall | **0.9287** |
+| Planet F1-Score | **0.9509** |
+
+> Replace the values above with your final evaluation metrics if they differ.
+
+---
+
+# 📋 Confusion Matrix
+
+<p align="center">
+
+<img src="assets/confusion_matrix.png" width="75%">
+
+</p>
+
+The confusion matrix summarizes the model's prediction performance by comparing predicted labels against the ground-truth classes.
+
+It highlights:
+
+- Correctly detected planetary candidates
+- Correctly rejected false positives
+- Misclassifications requiring further improvement
+
+---
+
+# 📈 Receiver Operating Characteristic (ROC)
+
+<p align="center">
+
+<img src="assets/roc_curve.png" width="75%">
+
+</p>
+
+The ROC Curve illustrates the trade-off between:
+
+- True Positive Rate
+- False Positive Rate
+
+The resulting ROC-AUC demonstrates strong discriminative capability of the trained classifier.
+
+---
+
+# 📉 Precision–Recall Curve
+
+<p align="center">
+
+<img src="assets/pr_curve.png" width="75%">
+
+</p>
+
+Since exoplanet detection often involves imbalanced datasets, the Precision–Recall Curve provides additional insight into model quality.
+
+A high area under the PR curve indicates reliable identification of planetary candidates while minimizing false detections.
+
+---
+
+# ⭐ Scientific Candidate Ranking
+
+Traditional classifiers simply predict whether a candidate is a planet.
+
+This project extends the prediction process by introducing a **Scientific Priority Score**.
+
+Each candidate is ranked using a combination of:
+
+- Prediction Confidence
+- Signal-to-Noise Ratio (SNR)
+- Transit Depth
+- Transit Duration
+- Orbital Period
+
+The resulting score helps prioritize candidates for future astronomical observations.
+
+This ranking transforms the dashboard from a classification tool into a scientific decision-support system.
+
+---
+
+# 🧠 Explainable AI
+
+Machine learning predictions alone are often difficult to interpret.
+
+To improve transparency, the dashboard automatically generates natural-language explanations describing why a candidate received its prediction.
+
+The explanation engine evaluates:
+
+- Prediction confidence
+- Transit signal quality
+- Orbital characteristics
+- Scientific importance
+- Overall assessment
+
+Example:
+
 ```
----
+Prediction: Planet Transit
 
-## Problem Statement
+✓ Model confidence is very high.
 
-Exoplanets are commonly detected using the transit method, where a planet passes in front of its host star and causes a small dip in brightness.
+✓ Strong signal-to-noise ratio indicates a reliable transit.
 
-Modern surveys generate thousands of candidate signals. Manual inspection is expensive and time-consuming.
+✓ Transit duration matches known planetary behaviour.
 
-This project applies deep learning to automatically classify transit candidates and assist in identifying potential exoplanets.
+✓ Scientific priority is high.
 
----
+Overall Assessment:
 
-## Dataset
+This candidate is highly promising and recommended for
+future astronomical follow-up observations.
+```
 
-### Processed Candidate Signals
-
-* Total Samples: 943
-* Planet Transits: 593
-* False Positives: 350
-
-Each processed sample contains:
-
-* Global Transit View (201 bins)
-* Local Transit View (61 bins)
-* Orbital Period
-* Transit Duration
-* Transit Depth
-* Signal-to-Noise Ratio (SNR)
+This improves trust in the model while making results accessible to non-expert users.
 
 ---
 
-## Installation
+# 📂 Project Structure
+
+```
+exoplanet-transit-classifier/
+│
+├── assets/
+│   ├── architecture_diagram.png
+│   ├── confusion_matrix.png
+│   ├── roc_curve.png
+│   ├── pr_curve.png
+│   └── screenshots/
+│
+├── data/
+│
+├── models/
+│
+├── dashboard.py
+├── predict.py
+├── train.py
+├── ranking.csv
+├── requirements.txt
+├── README.md
+├── LICENSE
+└── .gitignore
+```
+
+---
+
+# ⚙️ Installation
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/nishantnayakx/exoplanet-transit-classifier.git
 
 cd exoplanet-transit-classifier
-
-pip install -r requirements.txt
 ```
+
 ---
 
-## Quick Start
+## Create a Virtual Environment
 
-Run Interactive Dashboard:
+Windows
+
+```bash
+python -m venv venv
+
+venv\Scripts\activate
+```
+
+Linux / macOS
+
+```bash
+python3 -m venv venv
+
+source venv/bin/activate
+```
+
+---
+
+## Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# ▶️ Running the Dashboard
+
+Start the interactive dashboard using:
 
 ```bash
 python dashboard.py
 ```
 
-Run Analytics Dashboard:
+The application will be available at:
 
-```bash
-python dashboard_basic.py
 ```
-
-Open:
-
-```text
 http://127.0.0.1:8050
 ```
 
 ---
 
-## Model Information
+# ☁️ Deployment
 
-| Property         | Value                                                 |
-| ---------------- | ----------------------------------------------------- |
-| Architecture     | Dual-View CNN                                         |
-| Framework        | PyTorch                                               |
-| Input Features   | Global View, Local View, Period, Duration, Depth, SNR |
-| Output Classes   | Planet Transit / False Positive                       |
-| Training Samples | 943                                                   |
-| ROC-AUC          | 0.8424                                                |
+The dashboard is deployed using **Render**.
 
----
+Live Application:
 
-## Model Architecture
+https://exoplanet-transit-classifier.onrender.com/
 
-### Inputs
+Deployment includes:
 
-1. Global View (201 bins)
-2. Local View (61 bins)
-3. Scalar Features
+- Dash application
+- Plotly visualizations
+- Interactive Candidate Explorer
+- Scientific ranking
+- Explainable AI
+- Downloadable CSV rankings
 
-   * Period
-   * Duration
-   * Depth
-   * SNR
-
-### Architecture
-
-Global View → CNN Branch
-
-Local Transit View → CNN Branch
-
-Scalar Features → Dense Layer
-
-Feature Fusion → Fully Connected Layers
-
-Output → Planet Transit / False Positive
-
-![Architecture](assets/architecture_diagram.png)
+The deployed version is identical to the local application.
 
 ---
 
-## Features
+# 🛠️ Technology Stack
 
-- Dual-View CNN Architecture
-- Global and Local Transit Light Curve Analysis
-- Automated Candidate Ranking
-- Scientific Score Calculation
-- Interactive Dash Dashboard
-- Candidate Explorer
-- Confidence Analysis
-- ROC Curve Evaluation
-- Precision-Recall Evaluation
-- HTML Scientific Report Generation
-- Prediction Explainability
-- Render Cloud Deployment
+The project integrates multiple technologies across machine learning, data processing, visualization, and deployment.
+
+## Programming Language
+
+- Python 3.11
 
 ---
 
-## Research Highlights
+## Machine Learning
 
-- Developed a dual-view CNN for exoplanet transit classification.
-- Achieved ROC-AUC of 0.8424.
-- Ranked 943 processed Kepler candidates.
-- Generated scientific candidate rankings using astrophysical metrics.
-- Built an interactive Dash dashboard.
-- Deployed a cloud-hosted dashboard on Render.
-- Added explainable AI-style prediction interpretation.
+- PyTorch
+- NumPy
+- Pandas
 
 ---
 
-## Repository Highlights
+## Interactive Dashboard
 
-* End-to-end ML pipeline
-* Automated candidate ranking
-* Explainable prediction engine
-* Interactive scientific dashboard
-* Cloud deployment on Render
-* Scientific report generation
-* Citation-ready research project
+- Dash
+- Plotly
 
 ---
 
-## Results
+## Data Visualization
 
-Model Evaluation:
+- Plotly Express
+- Plotly Graph Objects
+- Matplotlib
 
-- Validation Accuracy: 78.7%
-- ROC-AUC: 0.8424
-- Planet Precision: 0.82
-- Planet Recall: 0.87
-- Planet F1 Score: 0.84
+---
 
+## Deployment
 
-### Validation Performance
+- Render
 
-| Metric              | Value  |
-| ------------------- | ------ |
-| Validation Accuracy | 78.7%  |
-| ROC-AUC             | 0.8424 |
-| Planet Precision    | 0.82   |
-| Planet Recall       | 0.87   |
-| Planet F1 Score     | 0.84   |
+---
 
-### Confusion Matrix
+## Development Tools
 
-```text
-[[239 111]
- [ 79 514]]
+- Git
+- GitHub
+- Visual Studio Code
+
+---
+
+# 🚀 Future Improvements
+
+Although the current system provides a complete end-to-end exoplanet detection pipeline, several extensions could further improve its capabilities.
+
+### Model Improvements
+
+- Transformer-based transit classifier
+- Ensemble learning
+- Bayesian uncertainty estimation
+- Multi-class classification
+
+---
+
+### Dashboard Enhancements
+
+- Real-time inference on uploaded light curves
+- Interactive confidence threshold adjustment
+- Advanced filtering of ranked candidates
+- Candidate comparison mode
+- Dark mode
+
+---
+
+### Scientific Improvements
+
+- Stellar parameter integration
+- Habitability score estimation
+- Radius and mass prediction
+- Multi-mission compatibility (TESS, PLATO, Roman Space Telescope)
+
+---
+
+### Engineering Improvements
+
+- Docker deployment
+- REST API
+- Automated CI/CD pipeline
+- Database-backed candidate storage
+- User authentication
+
+---
+
+# 📊 Project Summary
+
+The Exoplanet Transit Classifier successfully combines:
+
+- Deep Learning
+- Explainable AI
+- Scientific Candidate Ranking
+- Interactive Visualization
+- Cloud Deployment
+
+into a single end-to-end platform for exoplanet candidate exploration.
+
+The project demonstrates the complete machine learning lifecycle:
+
 ```
-
-Overall Accuracy: **80%**
-
----
-
-## Top Scientific Candidate
-
-| Rank | Candidate | Confidence | Scientific Score |
-|------|------------|------------|------------------|
-| 1 | 4455231_K01332.03 | 93.35% | 0.8405 |
-
-Characteristics:
-
-- Period: 56.64 days
-- Duration: 6.17 hours
-- Transit Depth: 589.7 ppm
-- SNR: 20.9
-
----
-
-## Visual Results
-
-### Confusion Matrix
-
-![Confusion Matrix](assets/confusion_matrix.png)
-
----
-
-## Additional Evaluation Metrics
-
-### ROC Curve
-
-![ROC Curve](assets/roc_curve.png)
-
-The model achieved an ROC-AUC score of **0.8424**, demonstrating strong discrimination between exoplanet transit candidates and false positives.
-
-### Precision-Recall Curve
-
-![PR Curve](assets/pr_curve.png)
-
-The Precision-Recall curve highlights the classifier's ability to maintain high precision while retrieving a large fraction of true exoplanet candidates.
-
----
-
-## Inference
-
-Predict a candidate signal:
-
-```bash
-python 05_predict.py path/to/sample.npz
-```
-
-Example Output:
-
-```text
-Prediction
-----------------------------------------
-Class      : planet_transit
-Confidence : 0.7629
-```
-
----
-
-## Dashboard Preview
-
-![Dashboard](assets/dashboard_full.png)
-
-Features:
-
-* Dataset Overview
-* Model Metrics
-* Prediction distribution
-* Confidence distribution
-* Confusion Matrix
-* Top-ranked candidates
-* Candidate Explorer
-* Prediction Confidence
-* Global View Visualization
-* Local View Visualization
-* Transit statistics
-
-Open:
-
-```text
-http://127.0.0.1:8050
-```
-
-### Prediction Explanation Engine
-
-The dashboard includes an explainability module that converts model outputs into human-readable scientific reasoning.
-
-Example explanations:
-
-* Model confidence is very high.
-* Strong signal-to-noise ratio.
-* Transit depth is clearly visible.
-* Transit duration is consistent with many planetary candidates.
-* Candidate has a relatively long orbital period.
-* High-priority candidate for follow-up study.
-
-#### Example
-
-![Prediction Explanation](assets/dashboard_explanation.png)
-
----
-
-## Candidate Ranking System
-
-After inference, all processed Kepler candidates are ranked according to:
-
-- Model confidence
-- Scientific Score
-- Transit depth
-- Signal-to-noise ratio (SNR)
-- Transit duration
-- Orbital period
-
-The ranking pipeline generates:
-
-```text
-candidate_ranking.csv
-```
-containing the most promising exoplanet candidates.
-
-Example:
-
-| Rank | Candidate | Confidence |
-|------|------------|------------|
-| 1 | K01332.03 | 0.9335 |
-| 2 | K01306.04 | 0.9271 |
-| 3 | K00806.03 | 0.9263 |
-
----
-
-## System Workflow
-
-NASA Exoplanet Archive Kepler Candidate Data
-
-↓
-
-Light Curve Acquisition
-
-↓
-
-Global and Local Transit Processing
-
-↓
-
-Dual-View CNN Classification
-
-↓
-
-Candidate Ranking
-
-↓
-
-Prediction Explanation
-
-↓
-
-Scientific Report Generation
-
-↓
-
+Dataset
+    ↓
+Preprocessing
+    ↓
+Training
+    ↓
+Evaluation
+    ↓
+Inference
+    ↓
+Explainability
+    ↓
 Interactive Dashboard
-
----
-
-## Scientific Report
-
-The pipeline automatically generates an HTML report summarizing:
-
-* Dataset Statistics
-* Model Performance
-* Candidate Rankings
-* Scientific Metrics
-
-Output:
-
-```text
-reports/exoplanet_report.html
+    ↓
+Cloud Deployment
 ```
 
 ---
 
-## Advanced Features
+# 📚 Learning Outcomes
 
-### Candidate Ranking System
+This project provided practical experience in:
 
-The project ranks all processed exoplanet candidates using model confidence and scientific transit characteristics.
-
-Generated file:
-
-candidate_ranking.csv
-
-Contains:
-
-- Rank
-- Prediction
-- Confidence
-- Scientific Score
-- Period
-- Duration
-- Transit Depth
-- Signal-to-Noise Ratio
-
-Top candidates can be inspected directly from the dashboard.
+- Deep Learning with PyTorch
+- Scientific Machine Learning
+- Data Visualization
+- Interactive Dashboard Development
+- Explainable AI
+- Software Engineering
+- Cloud Deployment
+- Git Version Control
+- Open Source Documentation
 
 ---
 
-### Prediction Explanation Engine
+# 🤝 Contributing
 
-The explain_prediction module provides human-readable reasoning behind model predictions.
+Contributions, feature requests, and suggestions are welcome.
 
-Example:
+If you would like to improve this project:
 
-- High confidence planet transit
-- Strong signal-to-noise ratio
-- Transit depth consistent with planetary events
-- Stable local transit profile
+1. Fork the repository
+2. Create a feature branch
 
-This helps interpret why the model classified a candidate as a likely exoplanet.
-
----
-
-### Interactive Candidate Explorer
-
-Dashboard features:
-
-- Candidate selection dropdown
-- Prediction label
-- Confidence score
-- Orbital period
-- Transit duration
-- Transit depth
-- Signal-to-noise ratio
-- Global View graph (201 bins)
-- Local View graph (61 bins)
-
-This allows visual inspection of every processed candidate.
-
----
-
-## Project Structure
-
-```text
-├── dashboard.py                     # interactive dashboard and Render deployment
-├── dashboard_basic.py               # lightweight analytics dashboard
-├── predict.py
-├── explain_prediction.py            # interpretable prediction explanations
-│
-├── candidate_ranking.csv            # ranked output of all candidates
-│
-├── reports/
-│   └── exoplanet_report.html
-│
-├── data/
-├── assets/
-│   ├── architecture_diagram.png
-│   ├── dashboard_full.png
-|   ├── dashboard_explanation.png
-│   ├── confusion_matrix.png
-│   ├── roc_curve.png
-│   └── pr_curve.png
-├── models/
-|
-├── 01_download_catalog.py
-├── 02_download_lightcurves.py
-├── 03_train_classifier.py
-├── 04_evaluate_classifier.py
-├── 05_predict.py
-├── 06_evaluate_model.py
-├── 07_rank_candidates.py            # ranks candidates by confidence and scientific score
-├── 08_export_report.py
-│
-├── README.md
-├── LICENSE
-├── requirements.txt
-└── CITATION.cff
+```bash
+git checkout -b feature/new-feature
 ```
 
----
+3. Commit your changes
 
-## Technologies Used
+```bash
+git commit -m "Add new feature"
+```
 
-* Python
-* PyTorch
-* NumPy
-* Pandas
-* Plotly
-* Dash
-* Render
+4. Push the branch
 
----
+```bash
+git push origin feature/new-feature
+```
 
-## Future Improvements
-
-- SHAP-based model explainability
-- Automated transit visualization generation
-- Multi-class astrophysical event classification
-- NASA Exoplanet Archive integration
-- Improved candidate ranking methodology
+5. Open a Pull Request
 
 ---
 
-## Citation
+# 👨‍💻 Author
 
-If you use this project in research or educational work, please cite it using the provided CITATION.cff file.
+## Nishant Nayak
 
----
+Machine Learning | Deep Learning | Cloud Computing | Open Source
 
-## Author
+GitHub
 
-**Nishant Nayak**
-
-GitHub:
 https://github.com/nishantnayakx
+
+Project Repository
+
+https://github.com/nishantnayakx/exoplanet-transit-classifier
+
+Live Dashboard
+
+https://exoplanet-transit-classifier.onrender.com/
+
+LinkedIn
+
+https://www.linkedin.com/in/nishantnayakx/
+
+---
+
+# 🙏 Acknowledgements
+
+Special thanks to the following projects and organizations:
+
+- NASA Kepler Mission
+- PyTorch
+- Plotly
+- Dash
+- Render
+- NumPy
+- Pandas
+- Open Source Community
+
+Without these incredible tools and publicly available datasets, this project would not have been possible.
+
+---
+
+# 📄 License
+
+This project is released under the MIT License.
+
+See the LICENSE file for additional information.
+
+---
+
+# ⭐ Support
+
+If you found this project useful:
+
+⭐ Star the repository
+
+🍴 Fork the project
+
+📢 Share it with others
+
+Your support helps improve future open-source work.
+
+---
+
+<p align="center">
+
+Made with ❤️ by <b>Nishant Nayak</b>
+
+</p>
