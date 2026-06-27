@@ -609,24 +609,37 @@ This improves trust in the model while making results accessible to non-expert u
 ```
 exoplanet-transit-classifier/
 │
-├── assets/
+├── assets/                     # Dashboard images and architecture diagram
 │   ├── architecture_diagram.png
 │   ├── confusion_matrix.png
 │   ├── roc_curve.png
 │   ├── pr_curve.png
 │   └── screenshots/
+│    
+├── data/                       # Processed Kepler dataset
+├── models/                     # Trained CNN weights
+├── reports/                    # Generated HTML scientific reports
 │
-├── data/
+├── 01_download_catalog.py      # Download Kepler candidate catalog
+├── 02_download_lightcurves.py  # Download Kepler light curves
+├── 03_train_classifier.py      # Train the Dual-View CNN
+├── 04_evaluate_classifier.py   # Evaluate classification performance
+├── 05_predict.py               # Candidate inference pipeline
+├── 06_evaluate_model.py        # Model evaluation and visualization
+├── 07_rank_candidates.py       # Scientific candidate ranking
+├── 08_export_report.py         # Generate automated HTML report
 │
-├── models/
+├── dashboard.py                # Interactive Dash dashboard
+├── dashboard_basic.py          # Lightweight dashboard version
+├── explain_prediction.py       # Explainable AI engine
+├── predict.py                  # Prediction utilities
 │
-├── dashboard.py
-├── predict.py
-├── train.py
-├── ranking.csv
+├── candidate_ranking.csv
 ├── requirements.txt
-├── README.md
+├── render.yaml
 ├── LICENSE
+├── README.md
+└── RESULTS.md
 └── .gitignore
 ```
 
