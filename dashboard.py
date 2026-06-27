@@ -994,293 +994,32 @@ app.layout = html.Div([
 )
 def update_candidate(path):
 
-    print("=" * 50)
-    print("Callback triggered")
-    print("Selected path:", path)
-    print("=" * 50)
+    print("=" * 60)
+    print("TEST CALLBACK EXECUTED")
+    print("Selected:", path)
+    print("=" * 60)
 
-    try:
+    fig = go.Figure()
 
-        result = predict_npz(path)
+    fig.add_scatter(
+        y=[1, 3, 2, 5, 4],
+        mode="lines"
+    )
 
-        print("predict_npz() completed")
+    return (
 
-        print("Prediction finished")
+        html.Div([
 
-        filename = os.path.basename(path)
+            html.H3("✅ Callback Works"),
 
-        print("Filename:", filename)
+            html.P(f"Selected: {path}")
 
-        row = ranking_df[
-            ranking_df["file"] == filename
-        ].iloc[0]
+        ]),
 
-        print("Ranking row loaded")
+        fig,
 
+        fig
 
-        explanations = []
-
-        if row["confidence"] > 0.90:
-            explanations.append(
-                "✅ Model confidence is very high, indicating strong classification certainty."
-            )
-        elif row["confidence"] > 0.75:
-            explanations.append(
-                "🟡 Model confidence is moderate, suggesting the prediction is reasonably reliable."
-            )
-        else:
-            explanations.append(
-                "⚠ Model confidence is low. Additional verification is recommended before drawing conclusions."
-            )
-
-        if row["snr"] > 20:
-            explanations.append(
-                "📡 Strong signal-to-noise ratio indicates a clear and distinguishable transit signal."
-            )
-        elif row["snr"] > 10:
-            explanations.append(
-                "📡 Signal-to-noise ratio is acceptable for identifying potential transit events."
-            )
-        else:
-            explanations.append(
-                "⚠ Weak signal-to-noise ratio may reduce the reliability of the detected transit signal."
-            )
-
-        if row["depth_ppm"] > 500:
-            explanations.append(
-                "🌑 Transit depth is significant, making the transit event clearly distinguishable from background noise."
-            )
-        else:
-            explanations.append(
-                "🌑 Transit depth is relatively shallow and may require additional validation to confirm the event."
-            )
-
-        if row["duration_hours"] < 10:
-            explanations.append(
-                "⏱ Transit duration falls within the typical range observed for many confirmed exoplanet candidates."
-            )
-        else:
-            explanations.append(
-                "⏱ Transit duration is unusually long and could indicate a false positive or a unique orbital configuration."
-            )
-
-        if row["period_days"] > 30:
-            explanations.append(
-                "🛰 The candidate exhibits a relatively long orbital period, suggesting a wider orbit around its host star."
-            )
-        elif row["period_days"] > 10:
-            explanations.append(
-                "🛰 The orbital period is moderate and consistent with many known exoplanet systems."
-            )
-        else:
-            explanations.append(
-                "🛰 The candidate has a short orbital period, characteristic of close-in planets such as Hot Jupiters or Ultra-Short Period planets."
-            )
-
-        if row["scientific_score"] > 0.80:
-            explanations.append(
-                "⭐ This candidate achieves a high scientific score and is an excellent target for detailed follow-up observations."
-            )
-        elif row["scientific_score"] > 0.60:
-            explanations.append(
-                "⭐ The candidate demonstrates moderate scientific potential and could benefit from additional observational analysis."
-            )
-        else:
-            explanations.append(
-                "⭐ The scientific score is relatively low, suggesting this candidate is currently a lower priority for follow-up studies."
-            )
-
-        if row["confidence"] > 0.90:
-            explanations.append(
-                "📝 Overall Assessment: This candidate appears highly promising and is recommended for further astronomical investigation."
-            )
-
-        elif row["confidence"] > 0.75:
-            explanations.append(
-                "📝 Overall Assessment: The candidate shows encouraging characteristics but should be validated with additional observations."
-            )
-
-        else:
-            explanations.append(
-                "📝 Overall Assessment: The prediction is uncertain, and further analysis is required before confirming this candidate."
-            )    
-
-        global_fig = go.Figure()
-
-        global_fig.add_trace(
-            go.Scatter(
-                y=result["global_view"],
-                mode="lines",
-                name="Global View"
-            )
-        )
-
-        global_fig.update_layout(
-            title="Global Transit View"
-        )
-
-        print("Global graph finished")
-
-        local_fig = go.Figure()
-
-        local_fig.add_trace(
-            go.Scatter(
-                y=result["local_view"],
-                mode="lines",
-                name="Local View"
-            )
-        )
-
-        local_fig.update_layout(
-            title="Local Transit View"
-        )
-
-        print("Local graph finished")
-
-        if result["scientific_score"] >= 0.85:
-
-            rating = "★★★★★ Excellent Candidate"
-
-        elif result["scientific_score"] >= 0.70:
-
-            rating = "★★★★ Strong Candidate"
-
-        elif result["scientific_score"] >= 0.55:
-
-            rating = "★★★ Moderate Candidate"
-
-        else:
-
-            rating = "★★ Needs Verification"
-
-
-
-        if result["prediction"] == "planet_transit":
-
-            prediction_display = "🪐 Planet Transit"
-
-            prediction_color = "#2ecc71"
-
-        else:
-
-            prediction_display = "⚠️ False Positive"
-
-            prediction_color = "#e74c3c"    
-
-
-        
-        pred_text = html.Div([
-
-            html.H3(
-                "📊 Prediction Summary",
-                style={
-                    "marginBottom": "20px",
-                    "color": "#2c3e50"
-                }
-            ),
-
-            html.Div([
-
-                html.Div([
-                    html.H6("🪐 Prediction"),
-                    html.H2(
-                        prediction_display,
-                        style={
-                            "color": prediction_color,
-                            "fontWeight":"bold"
-                        }
-
-                    )
-                ], style=CARD_STYLE),
-
-                html.Div([
-                    html.H6("📈 Confidence"),
-                    html.H3(f"{result['confidence']:.1%}")
-                ], style=CARD_STYLE),
-
-                html.Div([
-                    html.H6("Scientific Score"),
-                    html.H3(
-                        f"{result['scientific_score']*100:.2f}/100"
-                    ),
-                    html.P(
-                        rating,
-                        style={
-                            "fontSize":"12px",
-                            "color":"gray",
-                            "marginTop":"5px"
-                        }
-                    )
-                ], style=CARD_STYLE),
-
-                html.Div([
-                    html.H6("📡 Signal-to-Noise Ratio"),
-                    html.H3(f"{result['snr']:.2f}")
-                ], style=CARD_STYLE),
-
-            ], style={
-                "display": "flex",
-                "gap": "20px",
-                "justifyContent": "center",
-                "flexWrap": "wrap"
-            }),
-
-            html.Br(),
-
-            html.Div([
-
-                html.Div([
-                    html.H6("🛰 Orbital Period (days)"),
-                    html.H3(f"{result['period_days']:.2f}")
-                ], style=CARD_STYLE),
-
-                html.Div([
-                    html.H6("⏱ Transit Duration (hours)"),
-                    html.H3(f"{result['duration_hours']:.2f}")
-                ], style=CARD_STYLE),
-
-                html.Div([
-                    html.H6("🌑 Transit Depth (ppm)"),
-                    html.H3(f"{result['depth_ppm']:.1f}")
-                ], style=CARD_STYLE),
-
-            ], style={
-                "display": "flex",
-                "gap": "20px",
-                "justifyContent": "center",
-                "flexWrap": "wrap"
-            }),
-
-
-            html.H3(
-                "🧠 Scientific Model Insights",
-                style={
-                    "marginTop":"25px",
-                    "color":"#2c3e50"
-                }
-            ),
-
-            html.Ul(
-                [
-                    html.Li(
-                        x,
-                        style={
-                            "marginBottom":"10px",
-                            "fontSize":"15px"
-                        }
-                    )
-                    for x in explanations
-                ]
-            ),
-
-        ])
-
-        print("Returning callback")
-
-        return (
-        pred_text,
-        global_fig,
-        local_fig
     )
 
     except Exception as e:
