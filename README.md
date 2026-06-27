@@ -260,7 +260,7 @@ These metrics provide an overall assessment of model reliability.
 
 ---
 
-## 🪐 Prediction Distribution
+## 🪐 Prediction Distribution Across Dataset
 
 <p align="center">
 
@@ -274,6 +274,28 @@ This allows users to quickly understand the balance between:
 
 - Planet Transit candidates
 - False Positive detections
+
+---
+
+## 🎯 Model Confidence Distribution
+
+<p align="center">
+
+<img src="assets/screenshots/confidence_distribution.png" width="100%">
+
+</p>
+
+The **Model Confidence Distribution** illustrates how certain the neural network is when making predictions across the entire dataset.
+
+Confidence values are computed from the model's output probabilities and provide insight into prediction reliability.
+
+This visualization helps users:
+
+* Identify how confidently the model classifies candidates.
+* Understand the overall confidence profile of the trained network.
+* Detect potentially uncertain predictions that may require additional scientific validation.
+
+A concentration of predictions at higher confidence values indicates that the classifier has learned strong decision boundaries and produces consistent results for most candidate observations.
 
 ---
 
@@ -291,7 +313,58 @@ Candidates with higher scores are considered more promising for future astronomi
 
 ---
 
-## 🏆 Candidate Rankings
+## 🏆 Top Ranked Candidates
+
+<p align="center">
+
+<img src="assets/screenshots/top_ranked_candidates.png" width="100%">
+
+</p>
+
+The **Top Ranked Candidates** visualization highlights the ten highest-priority planetary candidates based on the custom **Scientific Priority Score**.
+
+Unlike traditional classification outputs, candidates are ordered according to multiple scientific indicators rather than confidence alone.
+
+Each bar represents an individual candidate and is color-coded according to its predicted class.
+
+Interactive hover information displays:
+
+* Scientific Priority Score
+* Prediction Label
+* Model Confidence
+* Signal-to-Noise Ratio (SNR)
+* Orbital Period
+* Transit Duration
+* Transit Depth
+
+This visualization enables researchers to rapidly identify the most promising exoplanet candidates for future observational follow-up.
+
+---
+
+## 🔬 Scientific Candidate Analysis
+
+<p align="center">
+
+<img src="assets/screenshots/scientific_candidate_analysis.png" width="100%">
+
+</p>
+
+The **Scientific Candidate Analysis** section explores the relationship between prediction confidence and scientific priority.
+
+Each point represents an individual Kepler candidate, allowing users to visually compare how model confidence aligns with the calculated Scientific Priority Score.
+
+This interactive visualization helps users:
+
+* Identify highly confident planetary candidates.
+* Detect scientifically valuable observations.
+* Explore candidate distributions across the dataset.
+* Recognize potential outliers that may warrant additional investigation.
+
+By combining machine learning predictions with astrophysical ranking metrics, this analysis provides deeper insight into candidate quality beyond simple binary classification.
+
+---
+
+## 📋 Candidate Rankings
 
 <p align="center">
 
