@@ -995,30 +995,66 @@ app.layout = html.Div([
 def update_candidate(path):
 
     print("=" * 60)
-    print("TEST CALLBACK EXECUTED")
+    print("PHASE A START")
     print("Selected:", path)
-    print("=" * 60)
 
-    fig = go.Figure()
+    result = predict_npz(path)
 
-    fig.add_scatter(
-        y=[1, 3, 2, 5, 4],
-        mode="lines"
+    print("Prediction completed")
+
+    global_fig = go.Figure()
+
+    global_fig.add_trace(
+        go.Scatter(
+            y=result["global_view"],
+            mode="lines",
+            name="Global View"
+        )
     )
+
+    global_fig.update_layout(
+        title="Global Transit View"
+    )
+
+    print("Global graph created")
+
+    local_fig = go.Figure()
+
+    local_fig.add_trace(
+        go.Scatter(
+            y=result["local_view"],
+            mode="lines",
+            name="Local View"
+        )
+    )
+
+    local_fig.update_layout(
+        title="Local Transit View"
+    )
+
+    print("Local graph created")
+
+    pred_text = html.Div([
+
+        html.H3("Prediction Test"),
+
+        html.H2(result["prediction"]),
+
+        html.P(
+            f"Confidence : {result['confidence']:.2%}"
+        )
+
+    ])
+
+    print("Returning callback")
 
     return (
 
-        html.Div([
+        pred_text,
 
-            html.H3("✅ Callback Works"),
+        global_fig,
 
-            html.P(f"Selected: {path}")
-
-        ]),
-
-        fig,
-
-        fig
+        local_fig
 
     )
 
