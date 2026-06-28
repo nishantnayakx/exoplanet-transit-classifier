@@ -988,36 +988,16 @@ app.layout = html.Div([
         Output("global-view-graph", "figure"),
         Output("local-view-graph", "figure")
     ],
-    [
-        Input("candidate-dropdown", "value")
-    ]
+    Input("candidate-dropdown", "value")
 )
 def update_candidate(path):
 
-    print("=" * 60)
-    print("STEP 2")
-    print(path)
-
-    result = predict_npz(path)
-
-    print("predict_npz finished")
+    print("CALLBACK ENTERED")
 
     return (
-
-        html.Div([
-
-            html.H2("Prediction Test"),
-
-            html.P(result["prediction"]),
-
-            html.P(result["confidence"])
-
-        ]),
-
+        html.Div("Hello"),
         go.Figure(),
-
         go.Figure()
-
     )
 
 @app.callback(
