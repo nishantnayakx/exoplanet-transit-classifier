@@ -5,6 +5,7 @@ import dash
 from dash import dcc, html, Input, Output, dash_table
 import plotly.express as px
 import plotly.graph_objects as go
+import time
 import pandas as pd
 import numpy as np
 
@@ -991,6 +992,10 @@ app.layout = html.Div([
     Input("candidate-dropdown", "value")
 )
 def update_candidate(path):
+
+    print("CALLBACK STARTED")
+    time.sleep(1)
+    print("AFTER SLEEP")
 
     print("=" * 60)
     print("STEP 2")
