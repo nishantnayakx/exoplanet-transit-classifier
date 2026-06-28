@@ -992,12 +992,30 @@ app.layout = html.Div([
 )
 def update_candidate(path):
 
-    print("CALLBACK ENTERED")
+    print("=" * 60)
+    print("STEP 2")
+    print(path)
+
+    result = predict_npz(path)
+
+    print("predict_npz finished")
 
     return (
-        html.Div("Hello"),
+
+        html.Div([
+
+            html.H2("Prediction Test"),
+
+            html.P(result["prediction"]),
+
+            html.P(result["confidence"])
+
+        ]),
+
         go.Figure(),
+
         go.Figure()
+
     )
 
 @app.callback(

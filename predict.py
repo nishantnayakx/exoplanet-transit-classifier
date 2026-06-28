@@ -97,24 +97,24 @@ def predict_npz(path):
 
     print("=" * 60)
     print("ENTERED predict_npz")
-    print("Selected file:", path)
+    print(path)
 
     d = np.load(path, allow_pickle=True)
-    print("NPZ LOADED")
+    print("1 NPZ loaded")
 
     global_view = torch.tensor(
         d["global_view"],
         dtype=torch.float32
     ).unsqueeze(0)
 
-    print("GLOBAL VIEW READY")
+    print("2 Global tensor ready")
 
     local_view = torch.tensor(
         d["local_view"],
         dtype=torch.float32
     ).unsqueeze(0)
 
-    print("LOCAL VIEW READY")
+    print("3 Local tensor ready")
 
     scalars = torch.tensor([[
 
@@ -128,11 +128,11 @@ def predict_npz(path):
 
     ]], dtype=torch.float32)
 
-    print("SCALARS READY")
+    print("4 Scalars ready")
 
     with torch.no_grad():
 
-        print("RUNNING MODEL")
+        print("5 About to run model")
 
         logits = model(
             global_view,
@@ -140,10 +140,11 @@ def predict_npz(path):
             scalars
         )
 
-        print("MODEL FINISHED")
+        print("6 Model finished")
 
         probs = torch.softmax(logits, dim=1)[0]
 
+    print("7 Softmax done")
     pred_idx = probs.argmax().item()
 
     scientific_score = (
