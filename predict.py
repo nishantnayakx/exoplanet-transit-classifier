@@ -95,44 +95,26 @@ print("Model loaded successfully")
 
 def predict_npz(path):
 
-    print("=" * 60)
-    print("ENTERED predict_npz")
-    print(path)
-
     d = np.load(path, allow_pickle=True)
-    print("1 NPZ loaded")
 
     global_view = torch.tensor(
         d["global_view"],
         dtype=torch.float32
     ).unsqueeze(0)
 
-    print("2 Global tensor ready")
-
     local_view = torch.tensor(
         d["local_view"],
         dtype=torch.float32
     ).unsqueeze(0)
 
-    print("3 Local tensor ready")
-
     scalars = torch.tensor([[
-
         np.log1p(float(d["period"])) / 5.0,
-
         float(d["duration_hrs"]) / 24.0,
-
         np.log1p(max(float(d["depth_ppm"]), 0)) / 12.0,
-
         np.log1p(max(float(d["snr"]), 0)) / 8.0
-
     ]], dtype=torch.float32)
 
-    print("4 Scalars ready")
-
     with torch.no_grad():
-
-        print("5 About to run model")
 
         logits = model(
             global_view,
@@ -140,11 +122,8 @@ def predict_npz(path):
             scalars
         )
 
-        print("6 Model finished")
-
         probs = torch.softmax(logits, dim=1)[0]
 
-    print("7 Softmax done")
     pred_idx = probs.argmax().item()
 
     scientific_score = (
@@ -153,22 +132,21 @@ def predict_npz(path):
         min(float(d["duration_hrs"]) / 10.0, 1.0) * 0.3
     )
 
-    print("BUILDING RETURN OBJECT")
+    print("Global view length:", len(d["global_view"]))
+    print("Local view length:", len(d["local_view"]))
 
-    result = {
-        "prediction": idx_to_label[pred_idx],
-        "confidence": float(probs[pred_idx]),
-        "scientific_score": scientific_score,
+    return {
+    "prediction": idx_to_label[pred_idx],
+    "confidence": float(probs[pred_idx]),
+    "scientific_score": scientific_score,
 
-        "period_days": float(d["period"]),
-        "duration_hours": float(d["duration_hrs"]),
-        "depth_ppm": float(d["depth_ppm"]),
-        "snr": float(d["snr"]),
+    "period_days": float(d["period"]),
+    "duration_hours": float(d["duration_hrs"]),
+    "depth_ppm": float(d["depth_ppm"]),
+    "snr": float(d["snr"]),
 
-        "global_view": d["global_view"].tolist(),
-        "local_view": d["local_view"].tolist()
-    }
+    "global_view": d["global_view"].tolist(),
+    "local_view": d["local_view"].tolist()
+}
 
-    print("RETURNING RESULT")
-    return result
 
