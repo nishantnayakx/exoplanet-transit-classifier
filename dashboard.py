@@ -1265,6 +1265,55 @@ def update_candidate(path):
         local_fig
     )
 
+
+    except Exception as e:
+
+        import traceback
+
+        print("=" * 60)
+        print("ERROR INSIDE update_candidate()")
+        print(str(e))
+        traceback.print_exc()
+        print("=" * 60)
+
+        error_fig = go.Figure()
+        error_fig.update_layout(
+            title="Error",
+            annotations=[
+                dict(
+                    text="Unable to generate graph.",
+                    showarrow=False,
+                    x=0.5,
+                    y=0.5
+                )
+            ]
+        )
+
+        return (
+
+            html.Div([
+
+                html.H3(
+                    "❌ Prediction Failed",
+                    style={"color": "red"}
+                ),
+
+                html.Pre(
+                    str(e),
+                    style={
+                        "whiteSpace": "pre-wrap",
+                        "fontSize": "14px"
+                    }
+                )
+
+            ]),
+
+            error_fig,
+
+            error_fig
+
+        )
+
 @app.callback(
     Output(
         "download-csv",
