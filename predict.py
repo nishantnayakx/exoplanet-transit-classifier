@@ -92,39 +92,47 @@ model.eval()
 print("Model loaded successfully")
 
 
+
 def predict_npz(path):
 
-    print("1")
-    d = np.load(path, allow_pickle=True)
+    print("=" * 60)
+    print("ENTERED predict_npz")
+    print("Selected file:", path)
 
-    print("2")
+    d = np.load(path, allow_pickle=True)
+    print("NPZ LOADED")
 
     global_view = torch.tensor(
         d["global_view"],
         dtype=torch.float32
     ).unsqueeze(0)
 
-    print("3")
+    print("GLOBAL VIEW READY")
 
     local_view = torch.tensor(
         d["local_view"],
         dtype=torch.float32
     ).unsqueeze(0)
 
-    print("4")
+    print("LOCAL VIEW READY")
 
     scalars = torch.tensor([[
+
         np.log1p(float(d["period"])) / 5.0,
+
         float(d["duration_hrs"]) / 24.0,
+
         np.log1p(max(float(d["depth_ppm"]), 0)) / 12.0,
+
         np.log1p(max(float(d["snr"]), 0)) / 8.0
+
     ]], dtype=torch.float32)
 
-    print("5")
+    print("SCALARS READY")
 
     with torch.no_grad():
 
-        print("6 before model")
+        print("RUNNING MODEL")
 
         logits = model(
             global_view,
@@ -132,15 +140,11 @@ def predict_npz(path):
             scalars
         )
 
-        print("7 after model")
+        print("MODEL FINISHED")
 
         probs = torch.softmax(logits, dim=1)[0]
 
-    print("8")
-
     pred_idx = probs.argmax().item()
-
-    print("9")
 
     scientific_score = (
         min(float(d["snr"]) / 20.0, 1.0) * 0.4 +
@@ -148,9 +152,9 @@ def predict_npz(path):
         min(float(d["duration_hrs"]) / 10.0, 1.0) * 0.3
     )
 
-    print("10")
+    print("BUILDING RETURN OBJECT")
 
-    return {
+    result = {
         "prediction": idx_to_label[pred_idx],
         "confidence": float(probs[pred_idx]),
         "scientific_score": scientific_score,
@@ -163,3 +167,7 @@ def predict_npz(path):
         "global_view": d["global_view"].tolist(),
         "local_view": d["local_view"].tolist()
     }
+
+    print("RETURNING RESULT")
+    return result
+
