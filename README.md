@@ -561,13 +561,12 @@ The model was evaluated using multiple complementary metrics to ensure reliable 
 
 | Metric | Score |
 |---------|------:|
-| Validation Accuracy | **95.76%** |
+| Validation Accuracy | **78.7%** |
 | ROC-AUC | **0.8424** |
-| Planet Precision | **0.9742** |
-| Planet Recall | **0.9287** |
-| Planet F1-Score | **0.9509** |
+| Planet Precision | **0.82** |
+| Planet Recall | **0.87** |
+| Planet F1-Score | **0.84** |
 
-> Replace the values above with your final evaluation metrics if they differ.
 
 ---
 
