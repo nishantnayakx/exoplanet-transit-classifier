@@ -1260,10 +1260,10 @@ def update_candidate(path):
 
 
         return (
-        pred_text,
-        global_fig,
-        local_fig
-    )
+            pred_text,
+            global_fig,
+            local_fig
+        )
 
 
     except Exception as e:
