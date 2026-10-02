@@ -4,7 +4,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-MODEL_DIR = "models"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, "models")
 
 
 class TransitClassifier(nn.Module):
@@ -95,58 +96,60 @@ print("Model loaded successfully")
 
 def predict_npz(path):
 
-    d = np.load(path, allow_pickle=True)
+    with np.load(path, allow_pickle=True) as d:
+        g_arr = d["global_view"]
+        l_arr = d["local_view"]
+        period = float(d["period"])
+        duration = float(d["duration_hrs"])
+        depth = float(d["depth_ppm"])
+        snr = float(d["snr"])
 
-    global_view = torch.tensor(
-        d["global_view"],
-        dtype=torch.float32
-    ).unsqueeze(0)
+        global_view = torch.tensor(
+            g_arr,
+            dtype=torch.float32
+        ).unsqueeze(0)
 
-    local_view = torch.tensor(
-        d["local_view"],
-        dtype=torch.float32
-    ).unsqueeze(0)
+        local_view = torch.tensor(
+            l_arr,
+            dtype=torch.float32
+        ).unsqueeze(0)
 
-    scalars = torch.tensor([[
-        np.log1p(float(d["period"])) / 5.0,
-        float(d["duration_hrs"]) / 24.0,
-        np.log1p(max(float(d["depth_ppm"]), 0)) / 12.0,
-        np.log1p(max(float(d["snr"]), 0)) / 8.0
-    ]], dtype=torch.float32)
+        scalars = torch.tensor([[
+            np.log1p(period) / 5.0,
+            duration / 24.0,
+            np.log1p(max(depth, 0.0)) / 12.0,
+            np.log1p(max(snr, 0.0)) / 8.0
+        ]], dtype=torch.float32)
 
-    with torch.no_grad():
+        with torch.no_grad():
+            logits = model(
+                global_view,
+                local_view,
+                scalars
+            )
+            probs = torch.softmax(logits, dim=1)[0]
 
-        logits = model(
-            global_view,
-            local_view,
-            scalars
+        pred_idx = probs.argmax().item()
+
+        scientific_score = (
+            min(snr / 20.0, 1.0) * 0.4 +
+            min(depth / 1000.0, 1.0) * 0.3 +
+            min(duration / 10.0, 1.0) * 0.3
         )
 
-        probs = torch.softmax(logits, dim=1)[0]
+        return {
+            "prediction": idx_to_label[pred_idx],
+            "confidence": float(probs[pred_idx]),
+            "scientific_score": scientific_score,
 
-    pred_idx = probs.argmax().item()
+            "period_days": period,
+            "duration_hours": duration,
+            "depth_ppm": depth,
+            "snr": snr,
 
-    scientific_score = (
-        min(float(d["snr"]) / 20.0, 1.0) * 0.4 +
-        min(float(d["depth_ppm"]) / 1000.0, 1.0) * 0.3 +
-        min(float(d["duration_hrs"]) / 10.0, 1.0) * 0.3
-    )
+            "global_view": g_arr.tolist(),
+            "local_view": l_arr.tolist()
+        }
 
-    print("Global view length:", len(d["global_view"]))
-    print("Local view length:", len(d["local_view"]))
-
-    return {
-    "prediction": idx_to_label[pred_idx],
-    "confidence": float(probs[pred_idx]),
-    "scientific_score": scientific_score,
-
-    "period_days": float(d["period"]),
-    "duration_hours": float(d["duration_hrs"]),
-    "depth_ppm": float(d["depth_ppm"]),
-    "snr": float(d["snr"]),
-
-    "global_view": d["global_view"].tolist(),
-    "local_view": d["local_view"].tolist()
-}
 
 

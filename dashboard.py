@@ -16,31 +16,33 @@ from explain_prediction import generate_explanation
 app = dash.Dash(__name__)
 server = app.server
 
-DATA_DIR = "data/processed"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data", "processed")
+CSV_PATH = os.path.join(BASE_DIR, "candidate_ranking.csv")
 
 print("=" * 60)
 print("Dashboard starting...")
 print("Current working directory:", os.getcwd())
+print("BASE_DIR:", BASE_DIR)
 print("DATA_DIR:", DATA_DIR)
 print("Exists:", os.path.exists(DATA_DIR))
 
 if os.path.exists(DATA_DIR):
-    print("Files found:", len(glob.glob(os.path.join(DATA_DIR, "*.npz"))))
-    print(glob.glob(os.path.join(DATA_DIR, "*.npz"))[:5])
+    raw_files = glob.glob(os.path.join(DATA_DIR, "*.npz"))
+    print("Files found:", len(raw_files))
+    print(raw_files[:5])
 else:
+    raw_files = []
     print("DATA DIRECTORY NOT FOUND!")
 
 print("=" * 60)
 
-files = sorted(
-    glob.glob(
-        os.path.join(DATA_DIR, "*.npz")
-    )
-)
+files = sorted(raw_files)
 
 ranking_df = pd.read_csv(
-    "candidate_ranking.csv"
+    CSV_PATH
 )
+
 
 
 top20_df = ranking_df.head(20)
@@ -993,24 +995,33 @@ app.layout = html.Div([
 )
 def update_candidate(path):
 
-    try:
+    if not path or not isinstance(path, str):
+        raise dash.exceptions.PreventUpdate
 
+    if not os.path.exists(path):
+        candidate_path = os.path.join(DATA_DIR, os.path.basename(path))
+        if os.path.exists(candidate_path):
+            path = candidate_path
+        else:
+            raise dash.exceptions.PreventUpdate
+
+    try:
         result = predict_npz(path)
 
-        filename = os.path.basename(path)
-
-        row = ranking_df[
-            ranking_df["file"] == filename
-        ].iloc[0]
-
+        confidence = result["confidence"]
+        snr = result["snr"]
+        depth_ppm = result["depth_ppm"]
+        duration_hours = result["duration_hours"]
+        period_days = result["period_days"]
+        scientific_score = result["scientific_score"]
 
         explanations = []
 
-        if row["confidence"] > 0.90:
+        if confidence > 0.90:
             explanations.append(
                 "✅ Model confidence is very high, indicating strong classification certainty."
             )
-        elif row["confidence"] > 0.75:
+        elif confidence > 0.75:
             explanations.append(
                 "🟡 Model confidence is moderate, suggesting the prediction is reasonably reliable."
             )
@@ -1019,11 +1030,11 @@ def update_candidate(path):
                 "⚠ Model confidence is low. Additional verification is recommended before drawing conclusions."
             )
 
-        if row["snr"] > 20:
+        if snr > 20:
             explanations.append(
                 "📡 Strong signal-to-noise ratio indicates a clear and distinguishable transit signal."
             )
-        elif row["snr"] > 10:
+        elif snr > 10:
             explanations.append(
                 "📡 Signal-to-noise ratio is acceptable for identifying potential transit events."
             )
@@ -1032,7 +1043,7 @@ def update_candidate(path):
                 "⚠ Weak signal-to-noise ratio may reduce the reliability of the detected transit signal."
             )
 
-        if row["depth_ppm"] > 500:
+        if depth_ppm > 500:
             explanations.append(
                 "🌑 Transit depth is significant, making the transit event clearly distinguishable from background noise."
             )
@@ -1041,7 +1052,7 @@ def update_candidate(path):
                 "🌑 Transit depth is relatively shallow and may require additional validation to confirm the event."
             )
 
-        if row["duration_hours"] < 10:
+        if duration_hours < 10:
             explanations.append(
                 "⏱ Transit duration falls within the typical range observed for many confirmed exoplanet candidates."
             )
@@ -1050,11 +1061,11 @@ def update_candidate(path):
                 "⏱ Transit duration is unusually long and could indicate a false positive or a unique orbital configuration."
             )
 
-        if row["period_days"] > 30:
+        if period_days > 30:
             explanations.append(
                 "🛰 The candidate exhibits a relatively long orbital period, suggesting a wider orbit around its host star."
             )
-        elif row["period_days"] > 10:
+        elif period_days > 10:
             explanations.append(
                 "🛰 The orbital period is moderate and consistent with many known exoplanet systems."
             )
@@ -1063,11 +1074,11 @@ def update_candidate(path):
                 "🛰 The candidate has a short orbital period, characteristic of close-in planets such as Hot Jupiters or Ultra-Short Period planets."
             )
 
-        if row["scientific_score"] > 0.80:
+        if scientific_score > 0.80:
             explanations.append(
                 "⭐ This candidate achieves a high scientific score and is an excellent target for detailed follow-up observations."
             )
-        elif row["scientific_score"] > 0.60:
+        elif scientific_score > 0.60:
             explanations.append(
                 "⭐ The candidate demonstrates moderate scientific potential and could benefit from additional observational analysis."
             )
@@ -1076,84 +1087,68 @@ def update_candidate(path):
                 "⭐ The scientific score is relatively low, suggesting this candidate is currently a lower priority for follow-up studies."
             )
 
-        if row["confidence"] > 0.90:
+        if confidence > 0.90:
             explanations.append(
                 "📝 Overall Assessment: This candidate appears highly promising and is recommended for further astronomical investigation."
             )
-
-        elif row["confidence"] > 0.75:
+        elif confidence > 0.75:
             explanations.append(
                 "📝 Overall Assessment: The candidate shows encouraging characteristics but should be validated with additional observations."
             )
-
         else:
             explanations.append(
                 "📝 Overall Assessment: The prediction is uncertain, and further analysis is required before confirming this candidate."
-            )    
+            )
 
         global_fig = go.Figure()
-
         global_fig.add_trace(
             go.Scatter(
                 y=result["global_view"],
                 mode="lines",
-                name="Global View"
+                name="Global View",
+                line=dict(color="#3b82f6", width=1.5)
             )
         )
-
         global_fig.update_layout(
-            title="Global Transit View"
+            title="Global Transit View",
+            template="plotly_white",
+            margin=dict(l=40, r=40, t=50, b=40),
+            height=350
         )
 
         local_fig = go.Figure()
-
         local_fig.add_trace(
             go.Scatter(
                 y=result["local_view"],
                 mode="lines",
-                name="Local View"
+                name="Local View",
+                line=dict(color="#3b82f6", width=1.5)
             )
         )
-
         local_fig.update_layout(
-            title="Local Transit View"
+            title="Local Transit View",
+            template="plotly_white",
+            margin=dict(l=40, r=40, t=50, b=40),
+            height=350
         )
 
-
-        if result["scientific_score"] >= 0.85:
-
+        if scientific_score >= 0.85:
             rating = "★★★★★ Excellent Candidate"
-
-        elif result["scientific_score"] >= 0.70:
-
+        elif scientific_score >= 0.70:
             rating = "★★★★ Strong Candidate"
-
-        elif result["scientific_score"] >= 0.55:
-
+        elif scientific_score >= 0.55:
             rating = "★★★ Moderate Candidate"
-
         else:
-
             rating = "★★ Needs Verification"
 
-
-
         if result["prediction"] == "planet_transit":
-
             prediction_display = "🪐 Planet Transit"
-
             prediction_color = "#2ecc71"
-
         else:
-
             prediction_display = "⚠️ False Positive"
+            prediction_color = "#e74c3c"
 
-            prediction_color = "#e74c3c"    
-
-
-        
         pred_text = html.Div([
-
             html.H3(
                 "📊 Prediction Summary",
                 style={
@@ -1163,42 +1158,40 @@ def update_candidate(path):
             ),
 
             html.Div([
-
                 html.Div([
                     html.H6("🪐 Prediction"),
                     html.H2(
                         prediction_display,
                         style={
                             "color": prediction_color,
-                            "fontWeight":"bold"
+                            "fontWeight": "bold"
                         }
-
                     )
                 ], style=CARD_STYLE),
 
                 html.Div([
                     html.H6("📈 Confidence"),
-                    html.H3(f"{result['confidence']:.1%}")
+                    html.H3(f"{confidence:.1%}")
                 ], style=CARD_STYLE),
 
                 html.Div([
                     html.H6("Scientific Score"),
                     html.H3(
-                        f"{result['scientific_score']*100:.2f}/100"
+                        f"{scientific_score * 100:.2f}/100"
                     ),
                     html.P(
                         rating,
                         style={
-                            "fontSize":"12px",
-                            "color":"gray",
-                            "marginTop":"5px"
+                            "fontSize": "12px",
+                            "color": "gray",
+                            "marginTop": "5px"
                         }
                     )
                 ], style=CARD_STYLE),
 
                 html.Div([
                     html.H6("📡 Signal-to-Noise Ratio"),
-                    html.H3(f"{result['snr']:.2f}")
+                    html.H3(f"{snr:.2f}")
                 ], style=CARD_STYLE),
 
             ], style={
@@ -1211,20 +1204,19 @@ def update_candidate(path):
             html.Br(),
 
             html.Div([
-
                 html.Div([
                     html.H6("🛰 Orbital Period (days)"),
-                    html.H3(f"{result['period_days']:.2f}")
+                    html.H3(f"{period_days:.2f}")
                 ], style=CARD_STYLE),
 
                 html.Div([
                     html.H6("⏱ Transit Duration (hours)"),
-                    html.H3(f"{result['duration_hours']:.2f}")
+                    html.H3(f"{duration_hours:.2f}")
                 ], style=CARD_STYLE),
 
                 html.Div([
                     html.H6("🌑 Transit Depth (ppm)"),
-                    html.H3(f"{result['depth_ppm']:.1f}")
+                    html.H3(f"{depth_ppm:.1f}")
                 ], style=CARD_STYLE),
 
             ], style={
@@ -1234,12 +1226,11 @@ def update_candidate(path):
                 "flexWrap": "wrap"
             }),
 
-
             html.H3(
                 "🧠 Scientific Model Insights",
                 style={
-                    "marginTop":"25px",
-                    "color":"#2c3e50"
+                    "marginTop": "25px",
+                    "color": "#2c3e50"
                 }
             ),
 
@@ -1248,16 +1239,14 @@ def update_candidate(path):
                     html.Li(
                         x,
                         style={
-                            "marginBottom":"10px",
-                            "fontSize":"15px"
+                            "marginBottom": "10px",
+                            "fontSize": "15px"
                         }
                     )
                     for x in explanations
                 ]
             ),
-
         ])
-
 
         return (
             pred_text,
@@ -1265,11 +1254,8 @@ def update_candidate(path):
             local_fig
         )
 
-
     except Exception as e:
-
         import traceback
-
         print("=" * 60)
         print("ERROR INSIDE update_candidate()")
         print(str(e))
@@ -1290,14 +1276,11 @@ def update_candidate(path):
         )
 
         return (
-
             html.Div([
-
                 html.H3(
                     "❌ Prediction Failed",
                     style={"color": "red"}
                 ),
-
                 html.Pre(
                     str(e),
                     style={
@@ -1305,33 +1288,28 @@ def update_candidate(path):
                         "fontSize": "14px"
                     }
                 )
-
             ]),
-
             error_fig,
-
             error_fig
-
         )
+
 
 @app.callback(
     Output(
         "download-csv",
         "data"
     ),
-
     Input(
         "download-btn",
         "n_clicks"
     ),
-
     prevent_initial_call=True
 )
 def download_csv(n_clicks):
-
     return dcc.send_file(
-        "candidate_ranking.csv"
+        CSV_PATH
     )
 
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True)
