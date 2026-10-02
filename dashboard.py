@@ -1,16 +1,24 @@
 import os
+
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
 import glob
+import time
 
 import dash
 from dash import dcc, html, Input, Output, dash_table
 import plotly.express as px
 import plotly.graph_objects as go
-import time
 import pandas as pd
 import numpy as np
 
 from predict import predict_npz
 from explain_prediction import generate_explanation
+
 
 
 app = dash.Dash(__name__)
@@ -1005,8 +1013,14 @@ def update_candidate(path):
         else:
             raise dash.exceptions.PreventUpdate
 
+    t_start = time.perf_counter()
+    print(f"[CANDIDATE] update_candidate started for: {os.path.basename(path)}")
+
     try:
+        t_pred_0 = time.perf_counter()
         result = predict_npz(path)
+        t_pred_1 = time.perf_counter()
+        print(f"[TIMING] Prediction finished in {(t_pred_1 - t_pred_0)*1000:.2f} ms")
 
         confidence = result["confidence"]
         snr = result["snr"]
@@ -1014,6 +1028,7 @@ def update_candidate(path):
         duration_hours = result["duration_hours"]
         period_days = result["period_days"]
         scientific_score = result["scientific_score"]
+
 
         explanations = []
 

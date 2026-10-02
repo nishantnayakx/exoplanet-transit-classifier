@@ -1,8 +1,17 @@
 import os
 import json
+
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
 import numpy as np
 import torch
 import torch.nn as nn
+
+torch.set_num_threads(1)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(BASE_DIR, "models")
@@ -45,12 +54,8 @@ class TransitClassifier(nn.Module):
             nn.ReLU()
         )
 
-        with torch.no_grad():
-            g = self.global_branch(torch.zeros(1, 1, 201))
-            l = self.local_branch(torch.zeros(1, 1, 61))
-
-        g_out = g.shape[1]
-        l_out = l.shape[1]
+        g_out = 1600
+        l_out = 480
 
         self.fusion = nn.Sequential(
             nn.Linear(g_out + l_out + 32, 128),
@@ -74,27 +79,36 @@ class TransitClassifier(nn.Module):
         return self.fusion(fused)
 
 
-with open(os.path.join(MODEL_DIR, "label_encoder.json")) as f:
-    label_to_idx = json.load(f)
+_model = None
+_label_to_idx = None
+_idx_to_label = None
 
-idx_to_label = {v: k for k, v in label_to_idx.items()}
 
-model = TransitClassifier(num_classes=len(label_to_idx))
+def get_model():
+    global _model, _label_to_idx, _idx_to_label
+    if _model is None:
+        torch.set_num_threads(1)
+        with open(os.path.join(MODEL_DIR, "label_encoder.json")) as f:
+            _label_to_idx = json.load(f)
 
-model.load_state_dict(
-    torch.load(
-        os.path.join(MODEL_DIR, "transit_classifier.pt"),
-        map_location="cpu"
-    )
-)
+        _idx_to_label = {v: k for k, v in _label_to_idx.items()}
 
-model.eval()
+        m = TransitClassifier(num_classes=len(_label_to_idx))
+        m.load_state_dict(
+            torch.load(
+                os.path.join(MODEL_DIR, "transit_classifier.pt"),
+                map_location="cpu"
+            )
+        )
+        m.eval()
+        _model = m
+        print("TransitClassifier model loaded successfully in worker process")
 
-print("Model loaded successfully")
-
+    return _model, _idx_to_label
 
 
 def predict_npz(path):
+    model, idx_to_label = get_model()
 
     with np.load(path, allow_pickle=True) as d:
         g_arr = d["global_view"]
@@ -150,6 +164,3 @@ def predict_npz(path):
             "global_view": g_arr.tolist(),
             "local_view": l_arr.tolist()
         }
-
-
-
