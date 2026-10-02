@@ -2,5 +2,6 @@ services:
   - type: web
     name: exoplanet-transit-classifier
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn dashboard:server
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+    startCommand: gunicorn dashboard:server --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
