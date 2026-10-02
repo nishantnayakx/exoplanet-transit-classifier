@@ -681,7 +681,7 @@ This improves trust in the model while making results accessible to non-expert u
 ```
 exoplanet-transit-classifier/
 │
-├── assets/                     # Dashboard images and architecture diagram
+├── assets/                     # Dashboard images and architecture diagram 
 │   ├── architecture_diagram.png
 │   ├── confusion_matrix.png
 │   ├── roc_curve.png
