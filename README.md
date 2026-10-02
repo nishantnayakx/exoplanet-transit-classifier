@@ -718,12 +718,14 @@ exoplanet-transit-classifier/
 ├── explain_prediction.py       # Explainable AI engine
 ├── predict.py                  # Prediction utilities
 │
-├── candidate_ranking.csv
-├── requirements.txt
-├── render.yaml
-├── LICENSE
-├── README.md
-└── RESULTS.md
+├── gunicorn.conf.py            # Production Gunicorn server configuration
+├── pyproject.toml              # Project metadata & deployment specification
+├── render.yaml                 # Render cloud deployment blueprint
+├── candidate_ranking.csv       # Precomputed candidate priority rankings
+├── requirements.txt            # Python dependencies
+├── LICENSE                     # MIT License
+├── README.md                   # Project documentation
+├── RESULTS.md                  # Classification metrics summary
 └── .gitignore
 ```
 
